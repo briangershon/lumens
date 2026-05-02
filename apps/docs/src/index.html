@@ -173,6 +173,7 @@
       .preview {
         display: grid;
         gap: 1rem;
+        align-content: start;
       }
 
       .preview-stage {
@@ -196,9 +197,26 @@
         gap: 1rem;
       }
 
+      .guide {
+        display: grid;
+        gap: 1rem;
+      }
+
       .control-row {
         display: grid;
         gap: 0.5rem;
+      }
+
+      .guide-section {
+        display: grid;
+        gap: 0.45rem;
+      }
+
+      .guide-section p {
+        margin: 0;
+        color: var(--text-muted);
+        font-size: 0.92rem;
+        line-height: 1.5;
       }
 
       select,
@@ -306,11 +324,32 @@
             <section class="panel preview">
               <div class="code-title">Live Preview</div>
               <div class="preview-stage"></div>
-                <pre><code>${escapeHtml(
-                  `<script type="module" src="${component.browserBundleName}"><\\/script>\n\n<${component.tagName} mode="${component.docs.initialMode}">\n  ${component.docs.slotText}\n</${component.tagName}>`
-                )}</code></pre>
             </section>
             <aside class="panel controls">
+              <section class="guide">
+                <div class="guide-section">
+                  <div class="code-title">Install</div>
+                  <p>Install the package from npm in the site or app where you want to use it.</p>
+                  <pre><code>${escapeHtml(`pnpm add ${component.packageName}`)}</code></pre>
+                </div>
+                <div class="guide-section">
+                  <div class="code-title">Use On Your Site</div>
+                  <p>Import the package once, then add the custom element in your markup and listen for its events.</p>
+                  <pre><code>${escapeHtml(
+                    `import '${component.packageName}';\n\ndocument.querySelector('${component.tagName}')?.addEventListener('clicked', (event) => {\n  console.log(event.detail.mode);\n});`
+                  )}</code></pre>
+                  <pre><code>${escapeHtml(
+                    `<${component.tagName} mode="${component.docs.initialMode}">\n  ${component.docs.slotText}\n</${component.tagName}>`
+                  )}</code></pre>
+                </div>
+                <div class="guide-section">
+                  <div class="code-title">Optional Browser Bundle</div>
+                  <p>If you are not installing from npm, you can load the standalone browser bundle directly.</p>
+                  <pre><code>${escapeHtml(
+                    `<script type="module" src="./${component.browserBundleName}"><\\/script>\n\n<${component.tagName} mode="${component.docs.initialMode}">\n  ${component.docs.slotText}\n</${component.tagName}>`
+                  )}</code></pre>
+                </div>
+              </section>
               <div class="control-row">
                 <label>Current mode</label>
                 <select>
@@ -319,12 +358,6 @@
                 </select>
               </div>
               <button type="button">Toggle via click()</button>
-              <div class="control-row">
-                <div class="code-title">npm usage</div>
-                <pre><code>${escapeHtml(
-                  `import '${component.packageName}';\n\ndocument.querySelector('${component.tagName}')?.addEventListener('clicked', (event) => {\n  console.log(event.detail.mode);\n});`
-                )}</code></pre>
-              </div>
               <div class="control-row">
                 <div class="code-title">Event Log</div>
                 <pre class="event-log">Waiting for interaction…</pre>
