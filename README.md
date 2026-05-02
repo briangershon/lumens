@@ -1,6 +1,6 @@
-# Web Components Monorepo
+# Lumens
 
-Monorepo for building, previewing, and distributing multiple open-source web components with shared tooling, a shared docs site, and independent package releases.
+Lumens is a monorepo for building, previewing, and distributing multiple open-source web components with shared tooling, a shared docs site, and independent package releases.
 
 ## What it includes
 
@@ -14,7 +14,7 @@ Monorepo for building, previewing, and distributing multiple open-source web com
 
 ## Current packages
 
-- `@web-components-monorepo/demo-theme-button`
+- `@briangershon/lumens-theme-button`
 
 The first package is a theme-toggle web component that:
 
@@ -86,24 +86,24 @@ pnpm run format:check
 ### npm package
 
 ```ts
-import '@web-components-monorepo/demo-theme-button';
+import '@briangershon/lumens-theme-button';
 
 document
-  .querySelector('demo-theme-button')
+  .querySelector('lumens-theme-button')
   ?.addEventListener('clicked', (event) => {
     console.log(event.detail.mode);
   });
 ```
 
 ```html
-<demo-theme-button mode="dark">Theme toggle</demo-theme-button>
+<lumens-theme-button mode="dark">Theme toggle</lumens-theme-button>
 ```
 
 ### Browser bundle
 
 ```html
-<script type="module" src="./demo-theme-button.bundle.js"></script>
-<demo-theme-button mode="dark">Theme toggle</demo-theme-button>
+<script type="module" src="./lumens-theme-button.bundle.js"></script>
+<lumens-theme-button mode="dark">Theme toggle</lumens-theme-button>
 ```
 
 ## Versioning and releases

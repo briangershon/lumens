@@ -1,5 +1,5 @@
 {
-  "name": "@web-components-monorepo/demo-theme-button",
+  "name": "@briangershon/lumens-theme-button",
   "version": "0.1.0",
   "description": "Theme-toggle web component with light and dark modes.",
   "type": "module",
@@ -16,7 +16,7 @@
       "import": "./dist/index.js",
       "default": "./dist/index.js"
     },
-    "./bundle": "./dist/demo-theme-button.bundle.js"
+    "./bundle": "./dist/lumens-theme-button.bundle.js"
   },
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -27,9 +27,9 @@
     "theme-toggle"
   ],
   "webComponent": {
-    "tagName": "demo-theme-button",
-    "bundleName": "demo-theme-button.bundle.js",
-    "displayName": "Demo Theme Button",
+    "tagName": "lumens-theme-button",
+    "bundleName": "lumens-theme-button.bundle.js",
+    "displayName": "Lumens Theme Button",
     "docs": {
       "summary": "A light/dark mode toggle that updates its own state and emits the selected mode.",
       "slotText": "Theme toggle",

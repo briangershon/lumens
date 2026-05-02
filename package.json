@@ -1,8 +1,8 @@
 {
-  "name": "web-components-monorepo",
+  "name": "lumens",
   "private": true,
   "version": "0.1.0",
-  "description": "Monorepo for authoring, previewing, and distributing multiple open-source web components.",
+  "description": "Lumens monorepo for authoring, previewing, and distributing multiple open-source web components.",
   "type": "module",
   "packageManager": "pnpm@9.6.0",
   "scripts": {

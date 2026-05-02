@@ -2,7 +2,7 @@
 
 ## Project Purpose
 
-This repository is a monorepo for building, testing, previewing, and releasing multiple web components from one shared workspace. The intended workflow is:
+This repository is Lumens, a monorepo for building, testing, previewing, and releasing multiple web components from one shared workspace. The intended workflow is:
 
 1. Author components inside `packages/`
 2. Build each package into npm-consumable module output and a standalone browser bundle
@@ -14,6 +14,7 @@ This repository is a monorepo for building, testing, previewing, and releasing m
 ## Design Principles
 
 - Keep components frameworkless unless a deliberate scope change is requested.
+- Prefix Lumens-owned component names consistently with `lumens`.
 - Preserve independent package releases.
 - Preserve the standalone browser bundle for every published component package.
 - Treat `apps/docs` as both the development playground and the public Pages site.
@@ -34,6 +35,7 @@ Do not move agent-specific instructions into `README.md` unless there is a human
 - Preserve the `pnpm` workspace structure.
 - Preserve `packages/` for publishable components and `apps/docs` for the shared docs app.
 - Preserve Changesets as the release/versioning mechanism unless the release strategy is intentionally redesigned.
+- Name Lumens component packages and custom element tags with the `lumens` prefix, for example `@briangershon/lumens-theme-button` and `lumens-theme-button`.
 - Keep public package usage centered on importing scoped packages or per-package browser bundles.
 - If a package API changes, update its docs/demo presentation in `apps/docs` and the root `README.md`.
 - If bundle paths or dist contracts change, update the docs build and release workflows together.

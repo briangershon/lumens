@@ -22,7 +22,7 @@ importers:
 
   apps/docs: {}
 
-  packages/demo-theme-button: {}
+  packages/lumens-theme-button: {}
 
 packages:
   '@babel/runtime@7.29.2':

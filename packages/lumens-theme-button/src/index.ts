@@ -80,7 +80,7 @@ const icons: Record<Mode, string> = {
 
 export type ThemeMode = Mode;
 
-export class DemoThemeButton extends HTMLElement {
+export class LumensThemeButton extends HTMLElement {
   static observedAttributes = ['mode'];
 
   #button: HTMLButtonElement;
@@ -154,6 +154,6 @@ export class DemoThemeButton extends HTMLElement {
   }
 }
 
-if (!customElements.get('demo-theme-button')) {
-  customElements.define('demo-theme-button', DemoThemeButton);
+if (!customElements.get('lumens-theme-button')) {
+  customElements.define('lumens-theme-button', LumensThemeButton);
 }
