@@ -38,5 +38,6 @@ Do not move agent-specific instructions into `README.md` unless there is a human
 - Name Lumens component packages and custom element tags with the `lumens` prefix, for example `@briangershon/lumens-theme-button` and `lumens-theme-button`.
 - Keep public package usage centered on importing scoped packages or per-package browser bundles.
 - If a package API changes, update its docs/demo presentation in `apps/docs` and the root `README.md`.
+- When rendering code examples inside the docs page's inline script, do not embed a literal `</script>` sequence in the source; generate it indirectly so the browser does not terminate the script early.
 - If bundle paths or dist contracts change, update the docs build and release workflows together.
 - Avoid introducing Turborepo, Nx, or a framework-heavy docs stack without a clear scaling reason.

@@ -346,7 +346,8 @@
                   <div class="code-title">Optional Browser Bundle</div>
                   <p>If you are not installing from npm, you can load the standalone browser bundle directly.</p>
                   <pre><code>${escapeHtml(
-                    `<script type="module" src="./${component.browserBundleName}"><\\/script>\n\n<${component.tagName} mode="${component.docs.initialMode}">\n  ${component.docs.slotText}\n</${component.tagName}>`
+                    `<script type="module" src="./${component.browserBundleName}"></scr` +
+                      `ipt>\n\n<${component.tagName} mode="${component.docs.initialMode}">\n  ${component.docs.slotText}\n</${component.tagName}>`
                   )}</code></pre>
                 </div>
               </section>
