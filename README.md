@@ -1,104 +1,132 @@
-# Web Component Starter
+# Web Components Monorepo
 
-Starter repository for building, previewing, and distributing an open-source web component with a single-file JavaScript bundle.
+Monorepo for building, previewing, and distributing multiple open-source web components with shared tooling, a shared docs site, and independent package releases.
 
 ## What it includes
 
-- A frameworkless custom element written in TypeScript
-- A single bundled browser artifact in `dist/`
-- A shared demo/playground page used locally and published to GitHub Pages
-- A GitHub Actions workflow for deploying the demo page
-- A GitHub Actions workflow for attaching the built bundle to GitHub Releases
-- An MIT license
+- `pnpm` workspaces for component packages and apps
+- independently releasable scoped component packages in `packages/`
+- a shared docs/playground app in `apps/docs`
+- standalone browser bundles for direct `<script type="module">` usage
+- Changesets for versioning and release automation
+- GitHub Actions for GitHub Pages deployment, npm publishing, and release assets
+- MIT licensing at the repo level
 
-## Included example
+## Current packages
 
-The initial component is `demo-theme-button`, a theme-toggle web component that:
+- `@web-components-monorepo/demo-theme-button`
+
+The first package is a theme-toggle web component that:
 
 - supports `light` and `dark` modes
-- keeps track of its current mode and flips modes on click
+- tracks its own current mode and flips on click
 - shows a sun icon in light mode and a moon icon in dark mode
-- emits a `clicked` event with the newly selected mode when activated
+- emits a `clicked` event with the newly selected mode
+
+## Workspace layout
+
+```text
+apps/docs            Shared GitHub Pages docs and development playground
+packages/*           Publishable web component packages
+scripts/             Shared build, dev, and release tooling
+```
 
 ## Local development
 
 Install dependencies:
 
 ```bash
-npm install
+pnpm install
 ```
 
-Run the local playground:
+Run the shared docs playground:
 
 ```bash
-npm run dev
+pnpm run dev
 ```
 
-This starts a local server at `http://localhost:4173` and rebuilds the bundle when `src/` changes. The served page is the same demo that gets published to GitHub Pages.
+This starts the docs app at `http://localhost:4173` and watches component source files so the browser-bundle demos stay current.
 
 ## Build
 
-Create the release bundle and demo site:
+Build all component packages and the docs app:
 
 ```bash
-npm run build
+pnpm run build
 ```
 
-Build output:
+Useful build targets:
 
-- `dist/demo-theme-button.js`
-- `site/index.html`
-- `site/assets/demo-theme-button.js`
+```bash
+pnpm run build:packages
+pnpm run build:docs
+```
+
+Outputs:
+
+- `packages/*/dist/` for package entrypoints, types, and browser bundles
+- `apps/docs/dist/` for the publishable GitHub Pages site
 
 ## Formatting
 
 Format the repository:
 
 ```bash
-npm run format
+pnpm run format
 ```
 
-Check formatting in CI:
+Check formatting:
 
 ```bash
-npm run format:check
+pnpm run format:check
 ```
 
-## Using the component
+## Using a component
 
-Import the bundled file in a browser page:
+### npm package
+
+```ts
+import '@web-components-monorepo/demo-theme-button';
+
+document
+  .querySelector('demo-theme-button')
+  ?.addEventListener('clicked', (event) => {
+    console.log(event.detail.mode);
+  });
+```
 
 ```html
-<script type="module" src="./demo-theme-button.js"></script>
-
 <demo-theme-button mode="dark">Theme toggle</demo-theme-button>
-
-<script type="module">
-  document
-    .querySelector('demo-theme-button')
-    ?.addEventListener('clicked', (event) => {
-      console.log('clicked detail', event.detail);
-    });
-</script>
 ```
 
-Public API:
+### Browser bundle
 
-- Tag name: `demo-theme-button`
-- Attribute/property: `mode="light" | "dark"` for the current selected mode
-- Event: `clicked` with `detail.mode` set to the selected mode after toggle
+```html
+<script type="module" src="./demo-theme-button.bundle.js"></script>
+<demo-theme-button mode="dark">Theme toggle</demo-theme-button>
+```
+
+## Versioning and releases
+
+Create a changeset for package changes:
+
+```bash
+pnpm changeset
+```
+
+Version packages locally:
+
+```bash
+pnpm run version-packages
+```
+
+Release automation is driven by Changesets on `main`:
+
+- changed packages are versioned independently
+- packages are published to npm
+- GitHub Releases are created for published package tags
+- each published package gets its standalone browser bundle attached as a release asset
 
 ## GitHub Pages
 
-The GitHub Pages workflow builds the component and publishes the generated `site/` directory. The demo page consumes the built bundle from `site/assets/`, so the published site exercises the same output shape as local development.
-
-## GitHub Releases
-
-The release workflow runs when you push a version tag such as:
-
-```bash
-git tag v0.1.0
-git push origin v0.1.0
-```
-
-On tag builds, GitHub Actions creates or updates a GitHub Release and uploads `dist/demo-theme-button.js` as the release artifact.
+The GitHub Pages workflow builds `apps/docs/dist` and deploys it as the shared public demo site for all workspace components.

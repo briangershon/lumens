@@ -1,0 +1,39 @@
+{
+  "name": "@web-components-monorepo/demo-theme-button",
+  "version": "0.1.0",
+  "description": "Theme-toggle web component with light and dark modes.",
+  "type": "module",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./bundle": "./dist/demo-theme-button.bundle.js"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "keywords": [
+    "web-component",
+    "custom-element",
+    "theme-toggle"
+  ],
+  "webComponent": {
+    "tagName": "demo-theme-button",
+    "bundleName": "demo-theme-button.bundle.js",
+    "displayName": "Demo Theme Button",
+    "docs": {
+      "summary": "A light/dark mode toggle that updates its own state and emits the selected mode.",
+      "slotText": "Theme toggle",
+      "initialMode": "dark"
+    }
+  }
+}

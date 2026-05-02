@@ -78,6 +78,8 @@ const icons: Record<Mode, string> = {
   dark: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.6 14.1A8.82 8.82 0 0 1 9.9 3.4a.55.55 0 0 0-.83-.6 10.26 10.26 0 1 0 12.13 12.13.55.55 0 0 0-.6-.83Z"></path></svg>',
 };
 
+export type ThemeMode = Mode;
+
 export class DemoThemeButton extends HTMLElement {
   static observedAttributes = ['mode'];
 

@@ -1,3 +1,5 @@
 node_modules
+apps/docs/dist
+packages/*/dist
 dist
 site

@@ -1,0 +1,369 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Web Components Monorepo</title>
+    <style>
+      :root {
+        color-scheme: light dark;
+        --page-bg: #f6f6eb;
+        --panel-bg: rgba(255, 255, 255, 0.76);
+        --panel-border: rgba(15, 23, 42, 0.1);
+        --text-main: #162032;
+        --text-muted: #475569;
+        --accent: #0f766e;
+        --shadow: 0 20px 60px rgba(15, 23, 42, 0.12);
+      }
+
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --page-bg: #08111f;
+          --panel-bg: rgba(8, 17, 31, 0.82);
+          --panel-border: rgba(148, 163, 184, 0.2);
+          --text-main: #e5eefb;
+          --text-muted: #94a3b8;
+          --accent: #67e8f9;
+          --shadow: 0 20px 60px rgba(2, 6, 23, 0.4);
+        }
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family:
+          'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Palatino,
+          Georgia, serif;
+        color: var(--text-main);
+        background:
+          radial-gradient(
+            circle at top left,
+            rgba(250, 204, 21, 0.28),
+            transparent 30%
+          ),
+          radial-gradient(
+            circle at top right,
+            rgba(14, 165, 233, 0.22),
+            transparent 28%
+          ),
+          linear-gradient(
+            180deg,
+            var(--page-bg),
+            color-mix(in srgb, var(--page-bg) 78%, white)
+          );
+      }
+
+      main {
+        width: min(1120px, calc(100% - 2rem));
+        margin: 0 auto;
+        padding: 3rem 0 4rem;
+      }
+
+      .hero {
+        display: grid;
+        gap: 1rem;
+        margin-bottom: 2rem;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(2.8rem, 6vw, 5.8rem);
+        line-height: 0.9;
+        letter-spacing: -0.05em;
+      }
+
+      .hero p,
+      .hero li,
+      .component p,
+      .component pre,
+      .component label,
+      .event-log {
+        font-family: system-ui, sans-serif;
+      }
+
+      .hero p {
+        width: min(64ch, 100%);
+        margin: 0;
+        color: var(--text-muted);
+        font-size: 1.05rem;
+        line-height: 1.6;
+      }
+
+      .hero ul {
+        margin: 0;
+        padding-left: 1.2rem;
+        color: var(--text-muted);
+      }
+
+      .eyebrow,
+      .component h2,
+      .code-title {
+        font-family:
+          'SFMono-Regular', SFMono-Regular, ui-monospace, Menlo, Monaco,
+          Consolas, monospace;
+      }
+
+      .eyebrow,
+      .code-title {
+        color: var(--accent);
+        font-size: 0.78rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      #components {
+        display: grid;
+        gap: 1.5rem;
+      }
+
+      .component {
+        display: grid;
+        gap: 1rem;
+        border: 1px solid var(--panel-border);
+        border-radius: 30px;
+        padding: 1.5rem;
+        background: var(--panel-bg);
+        backdrop-filter: blur(14px);
+        box-shadow: var(--shadow);
+      }
+
+      .component-header {
+        display: grid;
+        gap: 0.35rem;
+      }
+
+      .component h2 {
+        margin: 0;
+        color: var(--accent);
+        font-size: 0.9rem;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      .component-name {
+        font-family:
+          'SFMono-Regular', SFMono-Regular, ui-monospace, Menlo, Monaco,
+          Consolas, monospace;
+        font-size: 1.3rem;
+      }
+
+      .component-layout {
+        display: grid;
+        grid-template-columns: 1.15fr 0.85fr;
+        gap: 1rem;
+      }
+
+      .panel {
+        border: 1px solid var(--panel-border);
+        border-radius: 24px;
+        background: rgba(255, 255, 255, 0.32);
+        padding: 1.25rem;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        .panel {
+          background: rgba(15, 23, 42, 0.35);
+        }
+      }
+
+      .preview {
+        display: grid;
+        gap: 1rem;
+      }
+
+      .preview-stage {
+        display: grid;
+        place-items: center;
+        min-height: 280px;
+        border-radius: 22px;
+        background:
+          linear-gradient(160deg, rgba(255, 255, 255, 0.7), transparent),
+          repeating-linear-gradient(
+            45deg,
+            rgba(15, 23, 42, 0.03),
+            rgba(15, 23, 42, 0.03) 12px,
+            transparent 12px,
+            transparent 24px
+          );
+      }
+
+      .controls {
+        display: grid;
+        gap: 1rem;
+      }
+
+      .control-row {
+        display: grid;
+        gap: 0.5rem;
+      }
+
+      select,
+      button {
+        width: 100%;
+        border: 1px solid var(--panel-border);
+        border-radius: 14px;
+        padding: 0.8rem 0.95rem;
+        background: rgba(255, 255, 255, 0.72);
+        color: #0f172a;
+        font:
+          500 0.98rem/1.1 system-ui,
+          sans-serif;
+      }
+
+      @media (prefers-color-scheme: dark) {
+        select,
+        button {
+          background: rgba(15, 23, 42, 0.88);
+          color: #e2e8f0;
+        }
+      }
+
+      button {
+        cursor: pointer;
+      }
+
+      pre {
+        margin: 0;
+        white-space: pre-wrap;
+        color: var(--text-muted);
+        font-size: 0.92rem;
+        line-height: 1.6;
+      }
+
+      .event-log {
+        margin: 0;
+        white-space: pre-wrap;
+        color: var(--text-muted);
+        font-size: 0.92rem;
+        line-height: 1.6;
+      }
+
+      @media (max-width: 860px) {
+        .component-layout {
+          grid-template-columns: 1fr;
+        }
+
+        main {
+          padding-top: 2rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section class="hero">
+        <div class="eyebrow">Workspace Demo</div>
+        <h1>Multiple web components. One release workflow.</h1>
+        <p>
+          This shared docs app is the development playground and the published
+          GitHub Pages site for the monorepo. Each component demo below loads
+          the built browser bundle for that package rather than importing source
+          files directly.
+        </p>
+        <ul>
+          <li>Scoped npm packages for installable components</li>
+          <li>Standalone browser bundles for direct script usage</li>
+          <li>Shared tooling, docs, and agent instructions at the root</li>
+        </ul>
+      </section>
+
+      <section id="components"></section>
+    </main>
+
+    <script type="module">
+      const componentsRoot = document.querySelector('#components');
+      const components = await fetch('./components.json').then((response) =>
+        response.json()
+      );
+
+      const escapeHtml = (value) =>
+        value
+          .replaceAll('&', '&amp;')
+          .replaceAll('<', '&lt;')
+          .replaceAll('>', '&gt;');
+
+      const writeLog = (target, message) => {
+        const timestamp = new Date().toLocaleTimeString();
+        target.textContent = `[${timestamp}] ${message}\n${target.textContent}`;
+      };
+
+      for (const component of components) {
+        await import(component.bundlePath);
+
+        const article = document.createElement('article');
+        article.className = 'component';
+        article.innerHTML = `
+          <header class="component-header">
+            <h2>${escapeHtml(component.displayName)}</h2>
+            <div class="component-name">${escapeHtml(component.packageName)}</div>
+            <p>${escapeHtml(component.docs.summary)}</p>
+          </header>
+          <div class="component-layout">
+            <section class="panel preview">
+              <div class="code-title">Live Preview</div>
+              <div class="preview-stage"></div>
+                <pre><code>${escapeHtml(
+                  `<script type="module" src="${component.browserBundleName}"><\\/script>\n\n<${component.tagName} mode="${component.docs.initialMode}">\n  ${component.docs.slotText}\n</${component.tagName}>`
+                )}</code></pre>
+            </section>
+            <aside class="panel controls">
+              <div class="control-row">
+                <label>Current mode</label>
+                <select>
+                  <option value="light">light</option>
+                  <option value="dark">dark</option>
+                </select>
+              </div>
+              <button type="button">Toggle via click()</button>
+              <div class="control-row">
+                <div class="code-title">npm usage</div>
+                <pre><code>${escapeHtml(
+                  `import '${component.packageName}';\n\ndocument.querySelector('${component.tagName}')?.addEventListener('clicked', (event) => {\n  console.log(event.detail.mode);\n});`
+                )}</code></pre>
+              </div>
+              <div class="control-row">
+                <div class="code-title">Event Log</div>
+                <pre class="event-log">Waiting for interaction…</pre>
+              </div>
+            </aside>
+          </div>
+        `;
+
+        const previewStage = article.querySelector('.preview-stage');
+        const modeSelect = article.querySelector('select');
+        const triggerButton = article.querySelector('button');
+        const eventLog = article.querySelector('.event-log');
+
+        const instance = document.createElement(component.tagName);
+        instance.textContent = component.docs.slotText;
+        instance.mode = component.docs.initialMode;
+
+        modeSelect.value = instance.mode;
+        previewStage.append(instance);
+
+        modeSelect.addEventListener('change', () => {
+          instance.mode = modeSelect.value;
+          writeLog(eventLog, `mode preset to "${modeSelect.value}"`);
+        });
+
+        triggerButton.addEventListener('click', () => {
+          instance.click();
+        });
+
+        instance.addEventListener('clicked', (event) => {
+          modeSelect.value = event.detail.mode;
+          writeLog(
+            eventLog,
+            `clicked event fired with detail ${JSON.stringify(event.detail)}`
+          );
+        });
+
+        componentsRoot.append(article);
+      }
+    </script>
+  </body>
+</html>

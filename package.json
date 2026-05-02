@@ -1,25 +1,33 @@
 {
-  "name": "web-component-starter",
-  "version": "0.1.0",
+  "name": "web-components-monorepo",
   "private": true,
-  "description": "Starter repository for authoring, previewing, and distributing an open-source web component.",
+  "version": "0.1.0",
+  "description": "Monorepo for authoring, previewing, and distributing multiple open-source web components.",
   "type": "module",
+  "packageManager": "pnpm@9.6.0",
   "scripts": {
-    "build": "node scripts/build.mjs",
-    "dev": "node scripts/dev.mjs",
+    "build": "pnpm run build:packages && pnpm run build:docs",
+    "build:packages": "node scripts/build-all-packages.mjs",
+    "build:docs": "node scripts/build-docs.mjs",
+    "dev": "node scripts/dev-docs.mjs",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "changeset publish"
   },
   "keywords": [
-    "web-component",
+    "web-components",
+    "monorepo",
     "custom-elements",
-    "starter",
     "typescript",
     "github-pages"
   ],
   "license": "MIT",
   "devDependencies": {
+    "@changesets/cli": "^2.28.1",
     "esbuild": "^0.25.4",
-    "prettier": "^3.5.3"
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.3"
   }
 }

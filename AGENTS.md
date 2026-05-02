@@ -2,37 +2,39 @@
 
 ## Project Purpose
 
-This repository is a starter for authoring, previewing, and distributing open-source web components. The intended workflow is:
+This repository is a monorepo for building, testing, previewing, and releasing multiple web components from one shared workspace. The intended workflow is:
 
-1. Author the component in `src/`
-2. Bundle it into one browser-consumable JavaScript file
-3. Exercise that built artifact through the shared demo page
-4. Publish the demo to GitHub Pages
-5. Publish the bundle as a GitHub Release artifact
+1. Author components inside `packages/`
+2. Build each package into npm-consumable module output and a standalone browser bundle
+3. Preview packages together through the shared docs app in `apps/docs`
+4. Publish the docs app to GitHub Pages
+5. Publish changed packages to npm with Changesets
+6. Attach package browser bundles to GitHub Releases
 
 ## Design Principles
 
-- Keep the project frameworkless unless a deliberate shift in scope is requested.
-- Preserve the single-file distribution model for the public component artifact.
-- Treat the demo page as both the local development playground and the published example site.
-- Keep the demo aligned with the built artifact, not with source-only imports.
-- Prefer minimal tooling and small dependency surfaces.
+- Keep components frameworkless unless a deliberate scope change is requested.
+- Preserve independent package releases.
+- Preserve the standalone browser bundle for every published component package.
+- Treat `apps/docs` as both the development playground and the public Pages site.
+- Keep docs aligned with built package artifacts, not source-only imports.
+- Prefer shared tooling at the root over per-package custom tooling unless divergence is justified.
+- Keep dependencies minimal and explicit per package.
 - Maintain native accessibility behavior where possible.
-- Keep the starter generic and reusable rather than tailoring it to one app.
 
 ## Documentation Split
 
-- `README.md` is for humans: setup, usage, workflows, and release instructions.
-- `AGENTS.md` is for AI agents: project intent, guardrails, and implementation principles.
+- `README.md` is for humans: setup, workspace usage, package consumption, and release flow.
+- `AGENTS.md` is for AI agents: repo intent, guardrails, and implementation conventions.
 
-Do not move agent-specific instructions into `README.md` unless a human-facing reason is explicit.
+Do not move agent-specific instructions into `README.md` unless there is a human-facing reason.
 
 ## Editing Guardrails
 
-- Preserve the custom-element-first architecture.
-- Preserve the GitHub Pages + GitHub Release workflow unless intentionally redesigned.
-- Avoid adding frameworks, transpilation layers, or runtime dependencies without a strong workflow reason.
-- Keep public usage centered on importing one bundled JavaScript file in the browser.
-- Preserve the example component's toggle behavior unless the example itself is intentionally being replaced.
-- If the component API changes, update both the demo page and `README.md`.
-- If build output paths change, update the GitHub workflows and the demo import path together.
+- Preserve the `pnpm` workspace structure.
+- Preserve `packages/` for publishable components and `apps/docs` for the shared docs app.
+- Preserve Changesets as the release/versioning mechanism unless the release strategy is intentionally redesigned.
+- Keep public package usage centered on importing scoped packages or per-package browser bundles.
+- If a package API changes, update its docs/demo presentation in `apps/docs` and the root `README.md`.
+- If bundle paths or dist contracts change, update the docs build and release workflows together.
+- Avoid introducing Turborepo, Nx, or a framework-heavy docs stack without a clear scaling reason.
