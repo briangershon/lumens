@@ -54,7 +54,7 @@
             "description": "The host frame supplies the pale surface while the component keeps its foreground tuned for bright layouts.",
             "hostTheme": "light",
             "attributes": {
-              "speed": "1800",
+              "speed": "900",
               "label-limit": "14",
               "start-time": "2026-01-15T05:00:00Z"
             }
@@ -65,7 +65,7 @@
             "hostTheme": "dark",
             "attributes": {
               "dark-mode": "",
-              "speed": "1800",
+              "speed": "900",
               "label-limit": "14",
               "start-time": "2026-01-15T05:00:00Z"
             }

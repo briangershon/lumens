@@ -9,7 +9,7 @@ const ELEMENT_TAG_NAME = 'lumens-starmap-banner';
 const SELECTION_EVENT_NAME = 'starmap-object-selected';
 
 const DEFAULT_CONFIG = {
-  speedX: 1800,
+  speedX: 900,
   observer: {
     lat: 47.5,
     lon: -122,

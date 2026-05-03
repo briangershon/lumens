@@ -25,7 +25,7 @@ For the full installation and usage guide, including browser-bundle usage and ev
 
 | Attribute     | Property     | Type      | Default                    | Notes                                                                  |
 | ------------- | ------------ | --------- | -------------------------- | ---------------------------------------------------------------------- |
-| `speed`       | `speed`      | `number`  | `1800`                     | Positive number controlling simulated time progression.                |
+| `speed`       | `speed`      | `number`  | `900`                      | Positive number controlling simulated time progression.                |
 | `label-limit` | `labelLimit` | `number`  | `14`                       | Positive integer limit for visible labels.                             |
 | `start-time`  | `startTime`  | `string`  | `2026-01-15T05:00:00.000Z` | ISO timestamp used as the initial sky state.                           |
 | `dark-mode`   | `darkMode`   | `boolean` | `false`                    | Enables the higher-contrast foreground palette for dark host surfaces. |
