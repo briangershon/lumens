@@ -28,6 +28,7 @@ This repository is Lumens, a monorepo for building, testing, previewing, and rel
 - `README.md` is for humans: setup, workspace usage, package consumption, and release flow.
 - `AGENTS.md` is for AI agents: repo intent, guardrails, and implementation conventions.
 - `docs/component-authoring.md` is the reusable package-authoring playbook for creating new Lumens components.
+- `docs/publishing.md` is the canonical publishing playbook for first-time npm publishes, Trusted Publishing setup, and subsequent Changesets releases.
 
 Do not move agent-specific instructions into `README.md` unless there is a human-facing reason.
 
