@@ -1,5 +1,6 @@
 import { cp, mkdir, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { build } from 'esbuild';
 import {
   docsDistDir,
   docsSrcDir,
@@ -21,15 +22,21 @@ await cp(
 
 for (const component of components) {
   const componentAssetDir = path.join(assetsDir, component.dirName);
-  const bundlePath = path.join(component.distDir, component.bundleName);
-  const sourcemapPath = `${bundlePath}.map`;
+  const componentBundlePath = path.join(
+    componentAssetDir,
+    component.bundleName
+  );
 
   await mkdir(componentAssetDir, { recursive: true });
-  await cp(bundlePath, path.join(componentAssetDir, component.bundleName));
-  await cp(
-    sourcemapPath,
-    path.join(componentAssetDir, `${component.bundleName}.map`)
-  );
+  await build({
+    bundle: true,
+    entryPoints: [component.sourceEntry],
+    format: 'esm',
+    minify: true,
+    outfile: componentBundlePath,
+    platform: 'browser',
+    target: ['es2022'],
+  });
 
   manifest.push({
     packageName: component.packageName,

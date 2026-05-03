@@ -22,7 +22,6 @@ const mimeTypes = new Map([
   ['.html', 'text/html; charset=utf-8'],
   ['.js', 'text/javascript; charset=utf-8'],
   ['.json', 'application/json; charset=utf-8'],
-  ['.map', 'application/json; charset=utf-8'],
   ['.css', 'text/css; charset=utf-8'],
 ]);
 
@@ -43,14 +42,9 @@ async function syncDocsSite() {
   for (const component of components) {
     const componentAssetDir = path.join(assetsDir, component.dirName);
     const bundlePath = path.join(component.distDir, component.bundleName);
-    const sourcemapPath = `${bundlePath}.map`;
 
     await mkdir(componentAssetDir, { recursive: true });
     await cp(bundlePath, path.join(componentAssetDir, component.bundleName));
-    await cp(
-      sourcemapPath,
-      path.join(componentAssetDir, `${component.bundleName}.map`)
-    );
 
     manifest.push({
       packageName: component.packageName,
@@ -86,7 +80,6 @@ for (const component of components) {
     format: 'esm',
     outfile: path.join(component.distDir, component.bundleName),
     platform: 'browser',
-    sourcemap: true,
     target: ['es2022'],
     plugins: [
       {
@@ -104,7 +97,6 @@ for (const component of components) {
               minify: false,
               outfile: path.join(component.distDir, 'index.js'),
               platform: 'browser',
-              sourcemap: true,
               target: ['es2022'],
             });
 
@@ -126,7 +118,6 @@ for (const component of components) {
     minify: false,
     outfile: path.join(component.distDir, 'index.js'),
     platform: 'browser',
-    sourcemap: true,
     target: ['es2022'],
   });
   contexts.push(context);

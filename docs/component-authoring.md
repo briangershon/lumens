@@ -78,8 +78,8 @@ Follow the same package-local `tsconfig.json` shape:
 - set `outDir` to `dist`
 - enable declaration output with:
   - `declaration`
-  - `declarationMap`
   - `emitDeclarationOnly`
+- do not enable declaration maps for published package output
 
 ## Component implementation pattern
 
@@ -103,6 +103,8 @@ Every component package should work with the shared monorepo flows without packa
   - module output in `dist/index.js`
   - declaration output in `dist/index.d.ts`
   - standalone browser bundle in `dist/lumens-<name>.bundle.js`
+- keep the public entrypoint types self-contained so the published package can ship a single `dist/index.d.ts`
+- do not distribute JavaScript or declaration source maps in published package output
 - shared docs build copies the browser bundle into `apps/docs/dist/assets/...`
 - the docs app should automatically render a component card from package metadata
 
