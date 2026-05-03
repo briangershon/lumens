@@ -5,10 +5,12 @@ import {
   docsDistDir,
   docsSrcDir,
   getComponentPackages,
+  getDocsComponents,
   rootDir,
 } from './lib/workspace.mjs';
 
-const components = await getComponentPackages();
+const packageComponents = await getComponentPackages();
+const components = await getDocsComponents(packageComponents);
 const assetsDir = path.join(docsDistDir, 'assets');
 const manifest = [];
 
@@ -54,7 +56,9 @@ for (const component of components) {
     tagName: component.tagName,
     bundlePath: `./assets/${component.dirName}/${component.bundleName}`,
     browserBundleName: component.bundleName,
-    docs: component.docs,
+    summary: component.summary,
+    preview: component.preview,
+    gettingStarted: component.gettingStarted,
   });
 }
 

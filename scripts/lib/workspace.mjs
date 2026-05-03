@@ -1,6 +1,6 @@
 import { access, readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const moduleDir = path.dirname(fileURLToPath(import.meta.url));
 
@@ -9,6 +9,7 @@ export const packagesDir = path.join(rootDir, 'packages');
 export const docsAppDir = path.join(rootDir, 'apps', 'docs');
 export const docsSrcDir = path.join(docsAppDir, 'src');
 export const docsDistDir = path.join(docsAppDir, 'dist');
+export const docsComponentsPath = path.join(docsSrcDir, 'components.mjs');
 
 async function fileExists(filePath) {
   try {
@@ -36,11 +37,11 @@ export async function getComponentPackages() {
     }
 
     const manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
-    const webComponent = manifest.webComponent ?? {};
-    const docs = webComponent.docs ?? {};
-    const fallbackSlotText =
-      docs.slotText ?? webComponent.displayName ?? entry.name;
-    const fallbackInitialMode = docs.initialMode ?? 'light';
+    const bundleExport = manifest.exports?.['./bundle'];
+    const bundlePath =
+      typeof bundleExport === 'string'
+        ? bundleExport
+        : (bundleExport?.default ?? bundleExport?.import);
 
     components.push({
       dirName: entry.name,
@@ -51,26 +52,44 @@ export async function getComponentPackages() {
       description: manifest.description ?? '',
       sourceEntry: path.join(packageDir, 'src', 'index.ts'),
       tsconfigPath: path.join(packageDir, 'tsconfig.json'),
-      bundleName: webComponent.bundleName ?? `${entry.name}.bundle.js`,
-      tagName: webComponent.tagName ?? entry.name,
-      displayName: webComponent.displayName ?? entry.name,
-      docs: {
-        summary: docs.summary ?? manifest.description ?? '',
-        slotText: fallbackSlotText,
-        initialMode: fallbackInitialMode,
-        preview: {
-          kind: docs.preview?.kind ?? 'mode-toggle',
-          eventName: docs.preview?.eventName ?? 'clicked',
-          control: docs.preview?.control ?? 'mode',
-          slotText: docs.preview?.slotText ?? fallbackSlotText,
-          initialMode: docs.preview?.initialMode ?? fallbackInitialMode,
-          variants: docs.preview?.variants ?? [],
-        },
-      },
+      bundleName: bundlePath
+        ? path.basename(bundlePath)
+        : `${entry.name}.bundle.js`,
     });
   }
 
   components.sort((left, right) => left.dirName.localeCompare(right.dirName));
 
   return components;
+}
+
+export async function getDocsComponentDefinitions() {
+  const { components } = await import(
+    `${pathToFileURL(docsComponentsPath).href}?t=${Date.now()}`
+  );
+
+  return components;
+}
+
+export async function getDocsComponents(componentPackages = null) {
+  const packageComponents = componentPackages ?? (await getComponentPackages());
+  const docsComponents = await getDocsComponentDefinitions();
+  const packagesByName = new Map(
+    packageComponents.map((component) => [component.packageName, component])
+  );
+
+  return docsComponents.map((docsComponent) => {
+    const packageComponent = packagesByName.get(docsComponent.packageName);
+
+    if (!packageComponent) {
+      throw new Error(
+        `Docs component "${docsComponent.packageName}" does not match a workspace package.`
+      );
+    }
+
+    return {
+      ...packageComponent,
+      ...docsComponent,
+    };
+  });
 }

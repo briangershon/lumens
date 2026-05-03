@@ -15,6 +15,7 @@ import {
   docsDistDir,
   docsSrcDir,
   getComponentPackages,
+  getDocsComponents,
   rootDir,
 } from './lib/workspace.mjs';
 
@@ -26,7 +27,7 @@ const mimeTypes = new Map([
   ['.css', 'text/css; charset=utf-8'],
 ]);
 
-const components = await getComponentPackages();
+const packageComponents = await getComponentPackages();
 let syncQueue = Promise.resolve();
 
 async function copyDocsSource() {
@@ -43,6 +44,7 @@ async function copyDocsSource() {
 }
 
 async function syncDocsSite() {
+  const components = await getDocsComponents(packageComponents);
   const assetsDir = path.join(docsDistDir, 'assets');
   const manifest = [];
 
@@ -64,7 +66,9 @@ async function syncDocsSite() {
       tagName: component.tagName,
       bundlePath: `./assets/${component.dirName}/${component.bundleName}`,
       browserBundleName: component.bundleName,
-      docs: component.docs,
+      summary: component.summary,
+      preview: component.preview,
+      gettingStarted: component.gettingStarted,
     });
   }
 
@@ -81,7 +85,7 @@ function queueDocsSync() {
 
 const contexts = [];
 
-for (const component of components) {
+for (const component of packageComponents) {
   await rm(component.distDir, { force: true, recursive: true });
   await mkdir(component.distDir, { recursive: true });
 
@@ -187,5 +191,5 @@ process.on('SIGINT', shutdown);
 process.on('SIGTERM', shutdown);
 
 console.log(
-  `Watching ${components.length} component package(s) from ${path.relative(rootDir, docsSrcDir)}/.`
+  `Watching ${packageComponents.length} component package(s) from ${path.relative(rootDir, docsSrcDir)}/.`
 );

@@ -214,97 +214,113 @@
           >
         </div>
       </section>
-
-      <section class="panel section">
-        <div class="section-label">Current Package</div>
-        <h2>@briangershon/lumens-starmap-banner</h2>
-        <p>
-          An interactive astronomical banner with visible stars, constellations,
-          and exotic unseen objects like black holes. Hover astronomical objects
-          to inspect richer detail, and use `dark-mode` when the host surface
-          needs the higher-contrast palette.
-        </p>
-      </section>
-
-      <section class="grid">
-        <section class="panel section">
-          <div class="section-label">Install From npm</div>
-          <p>
-            Install the package in any app that can load ESM in the browser.
-          </p>
-          <pre><code>pnpm add @briangershon/lumens-starmap-banner</code></pre>
-        </section>
-
-        <section class="panel section">
-          <div class="section-label">Use The Browser Bundle</div>
-          <p>
-            If you are not installing from npm, load the standalone browser
-            bundle directly from the package output.
-          </p>
-          <pre><code>&lt;script
-  type="module"
-  src="./node_modules/@briangershon/lumens-starmap-banner/dist/lumens-starmap-banner.bundle.js"
->&lt;/script></code></pre>
-        </section>
-      </section>
-
-      <section class="panel section">
-        <div class="section-label">ESM Usage</div>
-        <p>
-          Import the package once, then place the custom element anywhere in
-          your layout.
-        </p>
-        <pre><code>import '@briangershon/lumens-starmap-banner';</code></pre>
-        <pre><code>&lt;lumens-starmap-banner
-  dark-mode
-  speed="900"
-  label-limit="14"
-  start-time="2026-01-15T05:00:00Z"
->&lt;/lumens-starmap-banner></code></pre>
-      </section>
-
-      <section class="panel section">
-        <div class="section-label">Listen For Events</div>
-        <p>
-          The component emits `starmap-object-selected` whenever the hovered
-          astronomical object changes.
-        </p>
-        <pre><code>document
-  .querySelector('lumens-starmap-banner')
-  ?.addEventListener('starmap-object-selected', (event) => {
-    if (!event.detail.selected) return;
-    console.log(event.detail.name, event.detail.type);
-  });</code></pre>
-      </section>
-
-      <section class="panel section">
-        <div class="section-label">What To Expect</div>
-        <div class="grid">
-          <div class="card">
-            <h2>Host-owned layout</h2>
-            <p>
-              The banner is designed to layer into a host header rather than act
-              as a full page or framework-owned scene.
-            </p>
-          </div>
-          <div class="card">
-            <h2>Light and dark surfaces</h2>
-            <p>
-              Use the default palette for light hosts, or add `dark-mode` when
-              the banner sits on a darker editorial surface.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section class="panel section">
-        <div class="section-label">Related Docs</div>
-        <div class="link-row">
-          <a class="button-link" href="./index.html"
-            >Live previews and showcase</a
-          >
-        </div>
-      </section>
+      <section id="packages"></section>
     </main>
+
+    <script type="module">
+      const packagesRoot = document.querySelector('#packages');
+      const components = await fetch('./components.json').then((response) =>
+        response.json()
+      );
+
+      const escapeHtml = (value) =>
+        value
+          .replaceAll('&', '&amp;')
+          .replaceAll('<', '&lt;')
+          .replaceAll('>', '&gt;');
+
+      const closingScript = '<' + '/script>';
+
+      const renderCodeBlock = (content) => {
+        const pre = document.createElement('pre');
+        const code = document.createElement('code');
+        code.textContent = content;
+        pre.append(code);
+        return pre;
+      };
+
+      for (const component of components) {
+        const packageSection = document.createElement('section');
+        packageSection.className = 'section';
+        packageSection.innerHTML = `
+          <section class="panel section">
+            <div class="section-label">Current Package</div>
+            <h2>${escapeHtml(component.packageName)}</h2>
+            <p>${escapeHtml(component.gettingStarted.overview)}</p>
+          </section>
+
+          <section class="grid">
+            <section class="panel section install-panel">
+              <div class="section-label">Install From npm</div>
+              <p>${escapeHtml(component.gettingStarted.installBody)}</p>
+            </section>
+
+            <section class="panel section bundle-panel">
+              <div class="section-label">Use The Browser Bundle</div>
+              <p>${escapeHtml(component.gettingStarted.bundleBody)}</p>
+            </section>
+          </section>
+
+          <section class="panel section esm-panel">
+            <div class="section-label">ESM Usage</div>
+            <p>${escapeHtml(component.gettingStarted.esmBody)}</p>
+          </section>
+
+          <section class="panel section event-panel">
+            <div class="section-label">Listen For Events</div>
+            <p>${escapeHtml(component.gettingStarted.eventBody)}</p>
+          </section>
+
+          <section class="panel section expectations-panel">
+            <div class="section-label">What To Expect</div>
+            <div class="grid expectation-grid"></div>
+          </section>
+
+          <section class="panel section">
+            <div class="section-label">Related Docs</div>
+            <div class="link-row">
+              <a class="button-link" href="./index.html"
+                >Live previews and showcase</a
+              >
+            </div>
+          </section>
+        `;
+
+        packageSection
+          .querySelector('.install-panel')
+          .append(renderCodeBlock(`pnpm add ${component.packageName}`));
+
+        packageSection.querySelector('.bundle-panel').append(
+          renderCodeBlock(`<script
+  type="module"
+  src="./node_modules/${component.packageName}/dist/${component.browserBundleName}"
+>${closingScript}`)
+        );
+
+        packageSection
+          .querySelector('.esm-panel')
+          .append(renderCodeBlock(component.gettingStarted.esmImport));
+        packageSection
+          .querySelector('.esm-panel')
+          .append(renderCodeBlock(component.gettingStarted.markupExample));
+        packageSection
+          .querySelector('.event-panel')
+          .append(renderCodeBlock(component.gettingStarted.eventExample));
+
+        const expectationGrid =
+          packageSection.querySelector('.expectation-grid');
+        for (const item of component.gettingStarted.expectations ?? []) {
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.innerHTML = `
+            <h2>${escapeHtml(item.title)}</h2>
+            <p>${escapeHtml(item.description)}</p>
+          `;
+          expectationGrid.append(card);
+        }
+
+        packagesRoot.append(packageSection);
+      }
+    </script>
   </body>
 </html>

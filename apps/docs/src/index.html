@@ -796,8 +796,7 @@
         previewStage.classList.add('centered');
 
         const instance = document.createElement(component.tagName);
-        instance.textContent = component.docs.preview.slotText;
-        instance.mode = component.docs.preview.initialMode;
+        instance.textContent = component.displayName;
         previewStage.append(instance);
 
         controlsRoot.insertAdjacentHTML(
@@ -827,11 +826,11 @@
           instance.click();
         });
 
-        instance.addEventListener(component.docs.preview.eventName, (event) => {
+        instance.addEventListener(component.preview.eventName, (event) => {
           modeSelect.value = event.detail.mode;
           writeLog(
             eventLog,
-            `${component.docs.preview.eventName} fired with detail ${JSON.stringify(event.detail)}`
+            `${component.preview.eventName} fired with detail ${JSON.stringify(event.detail)}`
           );
         });
       };
@@ -845,7 +844,7 @@
         const bannerGrid = document.createElement('div');
         bannerGrid.className = 'banner-grid';
 
-        for (const variant of component.docs.preview.variants ?? []) {
+        for (const variant of component.preview.variants ?? []) {
           const wrapper = document.createElement('section');
           wrapper.className = 'banner-variant';
           wrapper.innerHTML = `
@@ -870,19 +869,16 @@
           embed.prepend(instance);
           renderDefaultBannerNote(note, variant.title);
 
-          instance.addEventListener(
-            component.docs.preview.eventName,
-            (event) => {
-              if (!event.detail?.selected) {
-                renderDefaultBannerNote(note, variant.title);
-                writeLog(eventLog, 'selection cleared');
-                return;
-              }
-
-              renderBannerHoverNote(note, event.detail);
-              writeLog(eventLog, summarizeEventDetail(event.detail));
+          instance.addEventListener(component.preview.eventName, (event) => {
+            if (!event.detail?.selected) {
+              renderDefaultBannerNote(note, variant.title);
+              writeLog(eventLog, 'selection cleared');
+              return;
             }
-          );
+
+            renderBannerHoverNote(note, event.detail);
+            writeLog(eventLog, summarizeEventDetail(event.detail));
+          });
 
           bannerGrid.append(wrapper);
         }
@@ -904,7 +900,7 @@
           <header class="component-header">
             <h2>${escapeHtml(component.displayName)}</h2>
             <div class="component-name">${escapeHtml(component.packageName)}</div>
-            <p>${escapeHtml(component.docs.summary)}</p>
+            <p>${escapeHtml(component.summary)}</p>
           </header>
           <div class="component-layout">
             <section class="panel preview">
@@ -943,7 +939,7 @@
         const controlsRoot = article.querySelector('.component-controls');
         const eventLog = article.querySelector('.event-log');
 
-        if (component.docs.preview.kind === 'starmap-banner') {
+        if (component.preview.kind === 'starmap-banner') {
           renderStarmapBannerPreview(
             component,
             previewStage,
