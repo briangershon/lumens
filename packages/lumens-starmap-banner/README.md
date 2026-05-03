@@ -1,6 +1,6 @@
 # @briangershon/lumens-starmap-banner
 
-Decorative web component for rendering an animated starmap banner on light or dark host surfaces.
+Interactive web component for rendering an animated starmap banner with visible stars, constellations, and exotic unseen objects such as black holes. Mouse over astronomical objects to inspect more details, and use it on either light or dark host surfaces.
 
 ## Install
 
@@ -8,44 +8,18 @@ Decorative web component for rendering an animated starmap banner on light or da
 npm install @briangershon/lumens-starmap-banner
 ```
 
-## ESM usage
+## Quick use
 
 ```ts
 import '@briangershon/lumens-starmap-banner';
-
-document
-  .querySelector('lumens-starmap-banner')
-  ?.addEventListener('starmap-object-selected', (event) => {
-    if (!event.detail.selected) return;
-    console.log(event.detail.name, event.detail.type);
-  });
 ```
 
 ```html
-<lumens-starmap-banner
-  dark-mode
-  speed="1800"
-  label-limit="14"
-  start-time="2026-01-15T05:00:00Z"
-></lumens-starmap-banner>
+<lumens-starmap-banner></lumens-starmap-banner>
 ```
 
-## Browser bundle
-
-```html
-<script
-  type="module"
-  src="./node_modules/@briangershon/lumens-starmap-banner/dist/lumens-starmap-banner.bundle.js"
-></script>
-
-<lumens-starmap-banner
-  speed="1800"
-  label-limit="14"
-  start-time="2026-01-15T05:00:00Z"
-></lumens-starmap-banner>
-```
-
-The package also exposes the browser bundle through the `./bundle` export for tooling that resolves package subpath exports.
+For the full installation and usage guide, including browser-bundle usage and event-listening examples, use the canonical docs page:
+[https://briangershon.github.io/lumens/getting-started.html](https://briangershon.github.io/lumens/getting-started.html)
 
 ## Attributes and properties
 
@@ -60,7 +34,7 @@ The package also exposes the browser bundle through the `./bundle` export for to
 
 ### `starmap-object-selected`
 
-Dispatched when the hover target changes over the canvas.
+Dispatched when the hovered astronomical object changes over the canvas so the host can surface richer object details.
 
 ```ts
 type StarmapSelectionDetail = {
@@ -81,8 +55,8 @@ When `detail.selected` is `false`, the rest of the fields are `null`.
 
 ## Demo and docs
 
+- Canonical install and usage guide: [https://briangershon.github.io/lumens/getting-started.html](https://briangershon.github.io/lumens/getting-started.html)
 - Repository and workspace docs: https://github.com/briangershon/lumens#readme
-- Shared Lumens docs app: `apps/docs` in the repository
 
 ## License
 

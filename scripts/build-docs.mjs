@@ -1,4 +1,4 @@
-import { cp, mkdir, rm, writeFile } from 'node:fs/promises';
+import { cp, mkdir, readdir, rm, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { build } from 'esbuild';
 import {
@@ -12,13 +12,22 @@ const components = await getComponentPackages();
 const assetsDir = path.join(docsDistDir, 'assets');
 const manifest = [];
 
-await rm(docsDistDir, { force: true, recursive: true });
-await mkdir(assetsDir, { recursive: true });
+async function copyDocsSource() {
+  await mkdir(docsDistDir, { recursive: true });
+  const entries = await readdir(docsSrcDir, { withFileTypes: true });
 
-await cp(
-  path.join(docsSrcDir, 'index.html'),
-  path.join(docsDistDir, 'index.html')
-);
+  for (const entry of entries) {
+    await cp(
+      path.join(docsSrcDir, entry.name),
+      path.join(docsDistDir, entry.name),
+      { recursive: entry.isDirectory() }
+    );
+  }
+}
+
+await rm(docsDistDir, { force: true, recursive: true });
+await copyDocsSource();
+await mkdir(assetsDir, { recursive: true });
 
 for (const component of components) {
   const componentAssetDir = path.join(assetsDir, component.dirName);

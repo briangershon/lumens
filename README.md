@@ -1,61 +1,79 @@
 # Lumens
 
-Lumens is a monorepo for building, previewing, and distributing multiple open-source web components with shared tooling, a shared docs site, and independent package releases.
+Lumens is an open-source library of web components focused on visualizations. It is intended to provide browser-native components that add motion, atmosphere, and interactive discovery to editorial pages, product surfaces, and exploratory interfaces without requiring a framework.
 
-## What it includes
+## What Lumens is for
 
-- `pnpm` workspaces for component packages and apps
-- independently releasable scoped component packages in `packages/`
-- a shared docs/playground app in `apps/docs`
-- standalone browser bundles for direct `<script type="module">` usage
-- Changesets for versioning and release automation
-- GitHub Actions for GitHub Pages deployment, npm publishing, and release assets
-- MIT licensing at the repo level
+- visualization-driven custom elements for storytelling and interface ornament
+- installable npm packages with browser-ready standalone bundles
+- components that stay transparent to the host layout instead of owning the whole page
+- open-source primitives that can be reused across sites, demos, and experiments
 
-## Current packages
+## Current direction
 
-- `@briangershon/lumens-starmap-banner`
+Lumens currently leads with `@briangershon/lumens-starmap-banner`, an interactive astronomical banner component:
 
-The current package is a decorative header component that:
+- visible stars and constellations layered into a transparent animated sky
+- exotic unseen objects such as black holes mixed into the same field
+- hover interactions that surface richer astronomical object details
+- light and dark host support through attribute-level configuration
 
-- renders a transparent animated sky crop inside its own shadow DOM
-- supports light and dark host surfaces via the `dark-mode` attribute
-- accepts `speed`, `label-limit`, and `start-time` attributes
-- emits `starmap-object-selected` with hover details for host-owned captions
+The starmap banner is the first package, but it represents the broader design direction for the repo: expressive web components that turn visual systems into reusable browser-native building blocks.
 
-## Workspace layout
+## Quick start
 
-```text
-apps/docs            Shared GitHub Pages docs and development playground
-packages/*           Publishable web component packages
-scripts/             Shared build, dev, and release tooling
+Install the current package:
+
+```bash
+pnpm add @briangershon/lumens-starmap-banner
 ```
 
-## Local development
+Import it once and place the custom element in your page:
 
-Install dependencies:
+```ts
+import '@briangershon/lumens-starmap-banner';
+```
+
+```html
+<lumens-starmap-banner></lumens-starmap-banner>
+```
+
+For the full install and usage guide, use the canonical docs page:
+[https://briangershon.github.io/lumens/getting-started.html](https://briangershon.github.io/lumens/getting-started.html)
+
+## Explore the docs
+
+`apps/docs` is the shared public showcase and development playground. It loads built package artifacts rather than source-only imports so the demos reflect what consumers actually install.
+
+Canonical install and usage guide:
+[https://briangershon.github.io/lumens/getting-started.html](https://briangershon.github.io/lumens/getting-started.html)
+
+Run it locally:
 
 ```bash
 pnpm install
-```
-
-Run the shared docs playground:
-
-```bash
 pnpm run dev
 ```
 
 This starts the docs app at `http://localhost:4173` and watches component source files so the browser-bundle demos stay current.
 
-## Build
+## Development and publishing
 
-Build all component packages and the docs app:
+Lumens uses a shared workspace so multiple visualization components can be authored, previewed, and released from one repository while preserving independent package versions.
+
+```text
+apps/docs            Shared GitHub Pages showcase and development playground
+packages/*           Publishable visualization component packages
+scripts/             Shared build, dev, and release tooling
+```
+
+Build everything:
 
 ```bash
 pnpm run build
 ```
 
-Useful build targets:
+Useful targets:
 
 ```bash
 pnpm run build:packages
@@ -67,56 +85,12 @@ Outputs:
 - `packages/*/dist/` for package entrypoints, types, and browser bundles
 - `apps/docs/dist/` for the publishable GitHub Pages site
 
-## Formatting
-
 Format the repository:
 
 ```bash
 pnpm run format
-```
-
-Check formatting:
-
-```bash
 pnpm run format:check
 ```
-
-## Using a component
-
-### npm package
-
-import '@briangershon/lumens-starmap-banner';
-
-document
-.querySelector('lumens-starmap-banner')
-?.addEventListener('starmap-object-selected', (event) => {
-if (!event.detail.selected) return;
-console.log(event.detail.name, event.detail.type);
-});
-
-````
-
-```html
-<lumens-starmap-banner
-  dark-mode
-  speed="1800"
-  label-limit="14"
-  start-time="2026-01-15T05:00:00Z"
-></lumens-starmap-banner>
-````
-
-### Browser bundle
-
-<script type="module" src="./lumens-starmap-banner.bundle.js"></script>
-
-<lumens-starmap-banner
-speed="1800"
-label-limit="14"
-start-time="2026-01-15T05:00:00Z"
-
-> </lumens-starmap-banner>
-
-````
 
 ## Versioning and releases
 
@@ -124,7 +98,7 @@ Create a changeset for package changes:
 
 ```bash
 pnpm changeset
-````
+```
 
 Version packages locally:
 
@@ -205,4 +179,4 @@ This publishes from your local machine, so the GitHub Actions flow should remain
 
 ## GitHub Pages
 
-The GitHub Pages workflow builds `apps/docs/dist` and deploys it as the shared public demo site for all workspace components.
+The GitHub Pages workflow builds `apps/docs/dist` and deploys it as the shared public showcase for Lumens components.
