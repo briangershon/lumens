@@ -58,6 +58,7 @@ html {
 body {
   margin: 0;
   min-height: 100vh;
+  padding: 1rem 0 2rem;
   color: var(--text-main);
   font-family:
     'Iowan Old Style', 'Palatino Linotype', 'Book Antiqua', Palatino, Georgia,
@@ -91,10 +92,43 @@ body {
     );
 }
 
+.site-chrome,
+.site-footer {
+  width: min(1120px, calc(100% - 2rem));
+  margin: 0 auto;
+}
+
+.site-chrome {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 0.25rem;
+}
+
+.site-chrome-link,
+.site-footer-link {
+  text-decoration: none;
+}
+
+.site-chrome-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.72rem 1rem;
+  border: 1px solid var(--panel-border);
+  border-radius: 999px;
+  background: var(--panel-bg);
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(12px);
+  color: var(--accent-strong);
+  font:
+    600 0.92rem/1 system-ui,
+    sans-serif;
+}
+
 main {
   width: min(1120px, calc(100% - 2rem));
   margin: 0 auto;
-  padding: 3rem 0 4rem;
+  padding: 1.5rem 0 3rem;
 }
 
 h1,
@@ -569,8 +603,26 @@ pre {
 }
 
 .route-link:hover,
-.button-link:hover {
+.button-link:hover,
+.site-chrome-link:hover,
+.site-footer-link:hover {
   text-decoration: underline;
+}
+
+.site-footer {
+  display: flex;
+  justify-content: center;
+}
+
+.site-footer p {
+  margin: 0;
+  text-align: center;
+  font-size: 0.98rem;
+}
+
+.site-footer-link {
+  color: var(--accent-strong);
+  font-weight: 600;
 }
 
 @media (max-width: 860px) {
@@ -587,5 +639,9 @@ pre {
   .preview-overlay {
     inset: auto 0.75rem 0.75rem 0.75rem;
     padding: 0.8rem 0.85rem;
+  }
+
+  .site-chrome {
+    justify-content: center;
   }
 }

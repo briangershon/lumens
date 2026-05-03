@@ -38,6 +38,7 @@ Do not move agent-specific instructions into `README.md` unless there is a human
 ## Docs Conventions
 
 - Treat `apps/docs/src/index.html` as the visual docs index: discovery, positioning, preview, and links into component-specific guides.
+- Keep shared docs chrome consistent across pages: a top link to the GitHub repository and a footer attribution reading `Created by Brian Gershon`, with `Brian Gershon` linking to `https://briangershon.com`.
 - Give each published component its own dedicated canonical docs page under `apps/docs/src/components/`.
 - Optimize each component page to work as an LLM base and a human reference from one URL.
 - Keep the component page structure explicit and stable. At minimum include:
@@ -63,6 +64,7 @@ Do not move agent-specific instructions into `README.md` unless there is a human
 
 - Preserve the `pnpm` workspace structure.
 - Preserve `packages/` for publishable components and `apps/docs` for the shared docs app.
+- When making site or docs changes, review `AGENTS.md` and keep it up to date with any new layout conventions, maintenance expectations, or workflow guidance introduced by the change.
 - When creating a new component package, follow `docs/component-authoring.md`.
 - Preserve Changesets as the release/versioning mechanism unless the release strategy is intentionally redesigned.
 - Use Node.js 24 consistently in GitHub Actions unless the repo intentionally changes its runtime baseline.
