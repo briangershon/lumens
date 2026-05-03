@@ -14,6 +14,7 @@ This repository is Lumens, a monorepo for building, testing, previewing, and rel
 ## Design Principles
 
 - Keep components frameworkless unless a deliberate scope change is requested.
+- Refer to Lumens as a library or collection of web components, not as a company, person, or actor that "builds" things.
 - Prefix Lumens-owned component names consistently with `lumens`.
 - Preserve independent package releases.
 - Preserve the standalone browser bundle for every published component package.
