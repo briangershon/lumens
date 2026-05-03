@@ -69,8 +69,11 @@ After the first manual publish succeeds:
 1. Open the package settings in npm.
 2. Enable Trusted Publishing for this GitHub repository and its release workflow.
 3. Ensure GitHub Actions is enabled for the repository.
+4. In GitHub repository settings, allow GitHub Actions to create pull requests:
+   `Settings > Actions > General > Workflow permissions > Allow GitHub Actions to create and approve pull requests`
 
 The release workflow already expects Trusted Publishing and requests `id-token: write` so npm provenance can be generated automatically.
+The Changesets release workflow also needs pull request creation enabled so it can open and update the release PR on `main`.
 
 ## Subsequent releases with Changesets
 
