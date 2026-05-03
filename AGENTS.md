@@ -27,6 +27,7 @@ This repository is Lumens, a monorepo for building, testing, previewing, and rel
 
 - `README.md` is for humans: setup, workspace usage, package consumption, and release flow.
 - `AGENTS.md` is for AI agents: repo intent, guardrails, and implementation conventions.
+- `docs/component-authoring.md` is the reusable package-authoring playbook for creating new Lumens components.
 
 Do not move agent-specific instructions into `README.md` unless there is a human-facing reason.
 
@@ -34,6 +35,7 @@ Do not move agent-specific instructions into `README.md` unless there is a human
 
 - Preserve the `pnpm` workspace structure.
 - Preserve `packages/` for publishable components and `apps/docs` for the shared docs app.
+- When creating a new component package, follow `docs/component-authoring.md`.
 - Preserve Changesets as the release/versioning mechanism unless the release strategy is intentionally redesigned.
 - Use Node.js 24 consistently in GitHub Actions unless the repo intentionally changes its runtime baseline.
 - Keep GitHub Actions dependencies on Node-24-compatible majors; currently that means `actions/checkout@v6`, `actions/setup-node@v6`, `pnpm/action-setup@v6`, and `actions/upload-pages-artifact@v4`.
