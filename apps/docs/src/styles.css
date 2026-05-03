@@ -9,6 +9,12 @@
   --accent: #285b9e;
   --accent-soft: rgba(40, 91, 158, 0.12);
   --accent-strong: #173e74;
+  --hero-text-main: #10233f;
+  --hero-text-muted: #415a7d;
+  --hero-chip-bg: rgba(255, 252, 247, 0.88);
+  --hero-chip-border: rgba(35, 58, 92, 0.14);
+  --hero-button-bg: rgba(255, 252, 247, 0.8);
+  --hero-card-bg: rgba(255, 252, 247, 0.78);
   --code-bg: rgba(255, 255, 255, 0.52);
   --table-stripe: rgba(255, 255, 255, 0.24);
   --hero-line: rgba(58, 86, 126, 0.18);
@@ -27,6 +33,12 @@
     --accent: #9fd0ff;
     --accent-soft: rgba(159, 208, 255, 0.14);
     --accent-strong: #d9edff;
+    --hero-text-main: #f2f7ff;
+    --hero-text-muted: #d6e3f8;
+    --hero-chip-bg: rgba(15, 24, 40, 0.42);
+    --hero-chip-border: rgba(156, 188, 233, 0.18);
+    --hero-button-bg: rgba(15, 24, 40, 0.42);
+    --hero-card-bg: rgba(15, 24, 40, 0.4);
     --code-bg: rgba(15, 23, 42, 0.42);
     --table-stripe: rgba(15, 23, 42, 0.18);
     --hero-line: rgba(151, 191, 247, 0.16);
@@ -211,12 +223,14 @@ a {
   font-size: clamp(2.8rem, 6vw, 5.8rem);
   line-height: 0.92;
   letter-spacing: -0.05em;
+  color: var(--hero-text-main);
 }
 
 .hero p {
   width: min(64ch, 100%);
   margin: 0;
   font-size: 1.06rem;
+  color: var(--hero-text-muted);
 }
 
 .hero ul {
@@ -224,6 +238,7 @@ a {
   padding-left: 1.2rem;
   display: grid;
   gap: 0.4rem;
+  color: var(--hero-text-muted);
 }
 
 .hero-actions,
@@ -247,6 +262,12 @@ a {
   font-weight: 600;
 }
 
+.hero .button-link {
+  background: var(--hero-button-bg);
+  border-color: var(--hero-chip-border);
+  color: var(--hero-text-main);
+}
+
 .chip {
   display: inline-flex;
   align-items: center;
@@ -256,6 +277,12 @@ a {
   background: rgba(255, 255, 255, 0.28);
   color: var(--text-muted);
   font-size: 0.9rem;
+}
+
+.hero .chip {
+  background: var(--hero-chip-bg);
+  border-color: var(--hero-chip-border);
+  color: var(--hero-text-muted);
 }
 
 .panel {
@@ -346,8 +373,16 @@ a {
   padding: 1rem;
   border: 1px solid var(--panel-border);
   border-radius: 18px;
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--hero-card-bg);
   backdrop-filter: blur(12px);
+}
+
+.constellation-copy strong {
+  color: var(--hero-text-main);
+}
+
+.constellation-copy p {
+  color: var(--hero-text-muted);
 }
 
 .docs-grid {

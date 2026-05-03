@@ -57,6 +57,7 @@ Do not move agent-specific instructions into `README.md` unless there is a human
 - Prefer explicit HTML content on component pages over manifest-driven API generation.
 - Use stable fragment anchors on component pages for key sections such as install, properties, events, and example.
 - If a package API or recommended interaction pattern changes, update its dedicated docs page, starter example, live preview treatment, package `README.md`, and relevant index links together.
+- When changing docs visuals, especially translucent hero surfaces, overlays, chips, or theme-sensitive panels, verify text and UI contrast remains readable in both light and dark modes.
 
 ## Editing Guardrails
 
