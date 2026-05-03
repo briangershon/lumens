@@ -33,7 +33,14 @@
     "docs": {
       "summary": "A light/dark mode toggle that updates its own state and emits the selected mode.",
       "slotText": "Theme toggle",
-      "initialMode": "dark"
+      "initialMode": "dark",
+      "preview": {
+        "kind": "mode-toggle",
+        "eventName": "clicked",
+        "control": "mode",
+        "initialMode": "dark",
+        "slotText": "Theme toggle"
+      }
     }
   }
 }

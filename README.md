@@ -15,6 +15,7 @@ Lumens is a monorepo for building, previewing, and distributing multiple open-so
 ## Current packages
 
 - `@briangershon/lumens-theme-button`
+- `@briangershon/lumens-starmap-banner`
 
 The first package is a theme-toggle web component that:
 
@@ -22,6 +23,13 @@ The first package is a theme-toggle web component that:
 - tracks its own current mode and flips on click
 - shows a sun icon in light mode and a moon icon in dark mode
 - emits a `clicked` event with the newly selected mode
+
+The starmap banner package is a decorative header component that:
+
+- renders a transparent animated sky crop inside its own shadow DOM
+- supports light and dark host surfaces via the `dark-mode` attribute
+- accepts `speed`, `label-limit`, and `start-time` attributes
+- emits `starmap-object-selected` with hover details for host-owned captions
 
 ## Workspace layout
 
@@ -99,11 +107,40 @@ document
 <lumens-theme-button mode="dark">Theme toggle</lumens-theme-button>
 ```
 
+```ts
+import '@briangershon/lumens-starmap-banner';
+
+document
+  .querySelector('lumens-starmap-banner')
+  ?.addEventListener('starmap-object-selected', (event) => {
+    if (!event.detail.selected) return;
+    console.log(event.detail.name, event.detail.type);
+  });
+```
+
+```html
+<lumens-starmap-banner
+  dark-mode
+  speed="1800"
+  label-limit="14"
+  start-time="2026-01-15T05:00:00Z"
+></lumens-starmap-banner>
+```
+
 ### Browser bundle
 
 ```html
 <script type="module" src="./lumens-theme-button.bundle.js"></script>
 <lumens-theme-button mode="dark">Theme toggle</lumens-theme-button>
+```
+
+```html
+<script type="module" src="./lumens-starmap-banner.bundle.js"></script>
+<lumens-starmap-banner
+  speed="1800"
+  label-limit="14"
+  start-time="2026-01-15T05:00:00Z"
+></lumens-starmap-banner>
 ```
 
 ## Versioning and releases

@@ -38,6 +38,9 @@ export async function getComponentPackages() {
     const manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
     const webComponent = manifest.webComponent ?? {};
     const docs = webComponent.docs ?? {};
+    const fallbackSlotText =
+      docs.slotText ?? webComponent.displayName ?? entry.name;
+    const fallbackInitialMode = docs.initialMode ?? 'light';
 
     components.push({
       dirName: entry.name,
@@ -53,8 +56,16 @@ export async function getComponentPackages() {
       displayName: webComponent.displayName ?? entry.name,
       docs: {
         summary: docs.summary ?? manifest.description ?? '',
-        slotText: docs.slotText ?? webComponent.displayName ?? entry.name,
-        initialMode: docs.initialMode ?? 'light',
+        slotText: fallbackSlotText,
+        initialMode: fallbackInitialMode,
+        preview: {
+          kind: docs.preview?.kind ?? 'mode-toggle',
+          eventName: docs.preview?.eventName ?? 'clicked',
+          control: docs.preview?.control ?? 'mode',
+          slotText: docs.preview?.slotText ?? fallbackSlotText,
+          initialMode: docs.preview?.initialMode ?? fallbackInitialMode,
+          variants: docs.preview?.variants ?? [],
+        },
       },
     });
   }
