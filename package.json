@@ -1,0 +1,36 @@
+{
+  "name": "lumens",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Lumens monorepo for authoring, previewing, and distributing multiple open-source web components.",
+  "type": "module",
+  "packageManager": "pnpm@9.6.0",
+  "scripts": {
+    "build": "pnpm run build:packages && pnpm run build:docs",
+    "build:packages": "node scripts/build-all-packages.mjs",
+    "build:docs": "node scripts/build-docs.mjs",
+    "dev": "node scripts/dev-docs.mjs",
+    "check": "npm run format:check && npm run lint",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "oxlint .",
+    "changeset": "changeset",
+    "version-packages": "changeset version",
+    "release": "changeset publish"
+  },
+  "keywords": [
+    "web-components",
+    "monorepo",
+    "custom-elements",
+    "typescript",
+    "github-pages"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@changesets/cli": "^2.28.1",
+    "esbuild": "^0.25.4",
+    "oxlint": "^1.62.0",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.3"
+  }
+}

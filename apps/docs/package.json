@@ -1,0 +1,10 @@
+{
+  "name": "@briangershon/lumens-docs",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "build": "node ../../scripts/build-docs.mjs",
+    "dev": "node ../../scripts/dev-docs.mjs"
+  }
+}
