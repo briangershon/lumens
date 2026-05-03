@@ -4,8 +4,17 @@
   "description": "Decorative starmap banner web component for light and dark host surfaces.",
   "type": "module",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/briangershon/lumens.git"
+  },
+  "homepage": "https://github.com/briangershon/lumens#readme",
+  "bugs": {
+    "url": "https://github.com/briangershon/lumens/issues"
+  },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   },
   "files": [
     "dist"
@@ -25,7 +34,9 @@
     "web-component",
     "custom-element",
     "starmap",
-    "banner"
+    "banner",
+    "astronomy",
+    "hero"
   ],
   "webComponent": {
     "tagName": "lumens-starmap-banner",

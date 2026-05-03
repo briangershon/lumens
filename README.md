@@ -88,12 +88,13 @@ pnpm run format:check
 import '@briangershon/lumens-starmap-banner';
 
 document
-  .querySelector('lumens-starmap-banner')
-  ?.addEventListener('starmap-object-selected', (event) => {
-    if (!event.detail.selected) return;
-    console.log(event.detail.name, event.detail.type);
-  });
-```
+.querySelector('lumens-starmap-banner')
+?.addEventListener('starmap-object-selected', (event) => {
+if (!event.detail.selected) return;
+console.log(event.detail.name, event.detail.type);
+});
+
+````
 
 ```html
 <lumens-starmap-banner
@@ -102,17 +103,20 @@ document
   label-limit="14"
   start-time="2026-01-15T05:00:00Z"
 ></lumens-starmap-banner>
-```
+````
 
 ### Browser bundle
 
 <script type="module" src="./lumens-starmap-banner.bundle.js"></script>
+
 <lumens-starmap-banner
-  speed="1800"
-  label-limit="14"
-  start-time="2026-01-15T05:00:00Z"
-></lumens-starmap-banner>
-```
+speed="1800"
+label-limit="14"
+start-time="2026-01-15T05:00:00Z"
+
+> </lumens-starmap-banner>
+
+````
 
 ## Versioning and releases
 
@@ -120,7 +124,7 @@ Create a changeset for package changes:
 
 ```bash
 pnpm changeset
-```
+````
 
 Version packages locally:
 
