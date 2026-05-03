@@ -18,8 +18,8 @@ import '@briangershon/lumens-starmap-banner';
 <lumens-starmap-banner></lumens-starmap-banner>
 ```
 
-For the full installation and usage guide, including browser-bundle usage and event-listening examples, use the canonical docs page:
-[https://briangershon.github.io/lumens/getting-started.html](https://briangershon.github.io/lumens/getting-started.html)
+For the full installation and usage guide, including browser-bundle usage and event-listening examples, use the dedicated component docs page:
+[https://briangershon.github.io/lumens/components/lumens-starmap-banner.html](https://briangershon.github.io/lumens/components/lumens-starmap-banner.html)
 
 ## Attributes and properties
 
@@ -55,7 +55,7 @@ When `detail.selected` is `false`, the rest of the fields are `null`.
 
 ## Demo and docs
 
-- Canonical install and usage guide: [https://briangershon.github.io/lumens/getting-started.html](https://briangershon.github.io/lumens/getting-started.html)
+- Canonical install and usage guide: [https://briangershon.github.io/lumens/components/lumens-starmap-banner.html](https://briangershon.github.io/lumens/components/lumens-starmap-banner.html)
 - Repository and workspace docs: https://github.com/briangershon/lumens#readme
 
 ## License

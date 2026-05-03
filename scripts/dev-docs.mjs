@@ -7,7 +7,6 @@ import {
   rm,
   stat,
   watch,
-  writeFile,
 } from 'node:fs/promises';
 import http from 'node:http';
 import path from 'node:path';
@@ -15,7 +14,6 @@ import {
   docsDistDir,
   docsSrcDir,
   getComponentPackages,
-  getDocsComponents,
   rootDir,
 } from './lib/workspace.mjs';
 
@@ -44,38 +42,19 @@ async function copyDocsSource() {
 }
 
 async function syncDocsSite() {
-  const components = await getDocsComponents(packageComponents);
   const assetsDir = path.join(docsDistDir, 'assets');
-  const manifest = [];
 
   await rm(docsDistDir, { force: true, recursive: true });
   await copyDocsSource();
   await mkdir(assetsDir, { recursive: true });
 
-  for (const component of components) {
+  for (const component of packageComponents) {
     const componentAssetDir = path.join(assetsDir, component.dirName);
     const bundlePath = path.join(component.distDir, component.bundleName);
 
     await mkdir(componentAssetDir, { recursive: true });
     await cp(bundlePath, path.join(componentAssetDir, component.bundleName));
-
-    manifest.push({
-      packageName: component.packageName,
-      displayName: component.displayName,
-      description: component.description,
-      tagName: component.tagName,
-      bundlePath: `./assets/${component.dirName}/${component.bundleName}`,
-      browserBundleName: component.bundleName,
-      summary: component.summary,
-      preview: component.preview,
-      gettingStarted: component.gettingStarted,
-    });
   }
-
-  await writeFile(
-    path.join(docsDistDir, 'components.json'),
-    `${JSON.stringify(manifest, null, 2)}\n`
-  );
 }
 
 function queueDocsSync() {

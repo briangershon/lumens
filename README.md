@@ -38,15 +38,18 @@ import '@briangershon/lumens-starmap-banner';
 <lumens-starmap-banner></lumens-starmap-banner>
 ```
 
-For the full install and usage guide, use the canonical docs page:
-[https://briangershon.github.io/lumens/getting-started.html](https://briangershon.github.io/lumens/getting-started.html)
+For the full install and usage guide, use the dedicated component docs page:
+[https://briangershon.github.io/lumens/components/lumens-starmap-banner.html](https://briangershon.github.io/lumens/components/lumens-starmap-banner.html)
 
 ## Explore the docs
 
 `apps/docs` is the shared public showcase and development playground. It loads built package artifacts rather than source-only imports so the demos reflect what consumers actually install.
 
-Canonical install and usage guide:
-[https://briangershon.github.io/lumens/getting-started.html](https://briangershon.github.io/lumens/getting-started.html)
+Visual docs index:
+[https://briangershon.github.io/lumens/](https://briangershon.github.io/lumens/)
+
+Canonical starmap banner guide:
+[https://briangershon.github.io/lumens/components/lumens-starmap-banner.html](https://briangershon.github.io/lumens/components/lumens-starmap-banner.html)
 
 Run it locally:
 
