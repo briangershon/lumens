@@ -20,45 +20,33 @@ Lumens currently leads with `@briangershon/lumens-starmap-banner`, an interactiv
 
 The starmap banner is the first package, but it represents the broader design direction for the repo: expressive web components that turn visual systems into reusable browser-native building blocks.
 
-## Using a component
+## Quick start
 
-### npm package
+Install the current package:
+
+```bash
+pnpm add @briangershon/lumens-starmap-banner
+```
+
+Import it once and place the custom element in your page:
 
 ```ts
 import '@briangershon/lumens-starmap-banner';
-
-document
-  .querySelector('lumens-starmap-banner')
-  ?.addEventListener('starmap-object-selected', (event) => {
-    if (!event.detail.selected) return;
-    console.log(event.detail.name, event.detail.type);
-  });
 ```
 
 ```html
-<lumens-starmap-banner
-  dark-mode
-  speed="1800"
-  label-limit="14"
-  start-time="2026-01-15T05:00:00Z"
-></lumens-starmap-banner>
+<lumens-starmap-banner></lumens-starmap-banner>
 ```
 
-### Browser bundle
-
-```html
-<script type="module" src="./lumens-starmap-banner.bundle.js"></script>
-
-<lumens-starmap-banner
-  speed="1800"
-  label-limit="14"
-  start-time="2026-01-15T05:00:00Z"
-></lumens-starmap-banner>
-```
+For the full install and usage guide, use the canonical docs page:
+[https://briangershon.github.io/lumens/getting-started.html](https://briangershon.github.io/lumens/getting-started.html)
 
 ## Explore the docs
 
 `apps/docs` is the shared public showcase and development playground. It loads built package artifacts rather than source-only imports so the demos reflect what consumers actually install.
+
+Canonical install and usage guide:
+[https://briangershon.github.io/lumens/getting-started.html](https://briangershon.github.io/lumens/getting-started.html)
 
 Run it locally:
 

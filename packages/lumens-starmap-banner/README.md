@@ -8,44 +8,18 @@ Interactive web component for rendering an animated starmap banner with visible 
 npm install @briangershon/lumens-starmap-banner
 ```
 
-## ESM usage
+## Quick use
 
 ```ts
 import '@briangershon/lumens-starmap-banner';
-
-document
-  .querySelector('lumens-starmap-banner')
-  ?.addEventListener('starmap-object-selected', (event) => {
-    if (!event.detail.selected) return;
-    console.log(event.detail.name, event.detail.type);
-  });
 ```
 
 ```html
-<lumens-starmap-banner
-  dark-mode
-  speed="1800"
-  label-limit="14"
-  start-time="2026-01-15T05:00:00Z"
-></lumens-starmap-banner>
+<lumens-starmap-banner></lumens-starmap-banner>
 ```
 
-## Browser bundle
-
-```html
-<script
-  type="module"
-  src="./node_modules/@briangershon/lumens-starmap-banner/dist/lumens-starmap-banner.bundle.js"
-></script>
-
-<lumens-starmap-banner
-  speed="1800"
-  label-limit="14"
-  start-time="2026-01-15T05:00:00Z"
-></lumens-starmap-banner>
-```
-
-The package also exposes the browser bundle through the `./bundle` export for tooling that resolves package subpath exports.
+For the full installation and usage guide, including browser-bundle usage and event-listening examples, use the canonical docs page:
+[https://briangershon.github.io/lumens/getting-started.html](https://briangershon.github.io/lumens/getting-started.html)
 
 ## Attributes and properties
 
@@ -81,8 +55,8 @@ When `detail.selected` is `false`, the rest of the fields are `null`.
 
 ## Demo and docs
 
+- Canonical install and usage guide: [https://briangershon.github.io/lumens/getting-started.html](https://briangershon.github.io/lumens/getting-started.html)
 - Repository and workspace docs: https://github.com/briangershon/lumens#readme
-- Shared Lumens docs app: `apps/docs` in the repository
 
 ## License
 
