@@ -1,6 +1,6 @@
 # @briangershon/lumens-starmap-banner
 
-Decorative web component for rendering an animated starmap banner on light or dark host surfaces.
+Interactive web component for rendering an animated starmap banner with visible stars, constellations, and exotic unseen objects such as black holes. Mouse over astronomical objects to inspect more details, and use it on either light or dark host surfaces.
 
 ## Install
 
@@ -60,7 +60,7 @@ The package also exposes the browser bundle through the `./bundle` export for to
 
 ### `starmap-object-selected`
 
-Dispatched when the hover target changes over the canvas.
+Dispatched when the hovered astronomical object changes over the canvas so the host can surface richer object details.
 
 ```ts
 type StarmapSelectionDetail = {

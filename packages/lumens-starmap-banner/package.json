@@ -1,7 +1,7 @@
 {
   "name": "@briangershon/lumens-starmap-banner",
   "version": "0.1.0",
-  "description": "Decorative starmap banner web component for light and dark host surfaces.",
+  "description": "Interactive starmap banner web component with visible stars, constellations, exotic unseen objects, and hover details for light and dark host surfaces.",
   "type": "module",
   "license": "MIT",
   "repository": {
@@ -43,7 +43,7 @@
     "bundleName": "lumens-starmap-banner.bundle.js",
     "displayName": "Lumens Starmap Banner",
     "docs": {
-      "summary": "A transparent animated starmap banner for editorial headers, with optional dark-mode contrast and hover selection events.",
+      "summary": "An open-source starmap banner with visible stars, constellations, exotic unseen objects like black holes, hover details, and light or dark host support.",
       "slotText": "Starmap banner",
       "preview": {
         "kind": "starmap-banner",
