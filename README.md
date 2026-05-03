@@ -1,6 +1,6 @@
 # Lumens
 
-Lumens distributes open-source web components that focus on visualizations. The aim is to make browser-native components that add motion, atmosphere, and interactive discovery to editorial pages, product surfaces, and exploratory interfaces without requiring a framework.
+Lumens is an open-source library of web components focused on visualizations. It is intended to provide browser-native components that add motion, atmosphere, and interactive discovery to editorial pages, product surfaces, and exploratory interfaces without requiring a framework.
 
 ## What Lumens is for
 
