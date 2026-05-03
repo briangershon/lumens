@@ -7,6 +7,7 @@ Use this guide when publishing a Lumens package to npm for the first time or cut
 - Each package in `packages/` is published independently.
 - Shared workspace builds produce both npm-consumable module output and a standalone browser bundle.
 - Changesets drives versioning and release automation on `main`.
+- Package `CHANGELOG.md` files are generated and updated automatically during versioning.
 - GitHub Actions publishes changed packages to npm, creates GitHub Releases, and attaches package browser bundles as release assets.
 
 ## Before publishing any package
@@ -91,6 +92,7 @@ Once the change reaches `main`, GitHub Actions will:
 
 - build the workspace
 - open or update the Changesets release PR with the bumped package versions
+- update or create the released package `CHANGELOG.md` files
 
 When you are ready to publish, merge the generated release PR. On that subsequent `main` run, GitHub Actions will:
 
