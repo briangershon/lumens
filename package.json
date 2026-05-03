@@ -10,6 +10,7 @@
     "build:packages": "node scripts/build-all-packages.mjs",
     "build:docs": "node scripts/build-docs.mjs",
     "dev": "node scripts/dev-docs.mjs",
+    "check": "npm run format:check",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "changeset": "changeset",

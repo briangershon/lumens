@@ -35,6 +35,7 @@ Do not move agent-specific instructions into `README.md` unless there is a human
 - Preserve the `pnpm` workspace structure.
 - Preserve `packages/` for publishable components and `apps/docs` for the shared docs app.
 - Preserve Changesets as the release/versioning mechanism unless the release strategy is intentionally redesigned.
+- Use Node.js 24 consistently in GitHub Actions unless the repo intentionally changes its runtime baseline.
 - Name Lumens component packages and custom element tags with the `lumens` prefix, for example `@briangershon/lumens-theme-button` and `lumens-theme-button`.
 - Keep public package usage centered on importing scoped packages or per-package browser bundles.
 - If a package API changes, update its docs/demo presentation in `apps/docs` and the root `README.md`.
