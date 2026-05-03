@@ -50,12 +50,14 @@ npm pack --dry-run
 5. Publish the package manually once from that package directory:
 
 ```bash
-npm publish --access public
+npm publish --access public --provenance=false
 ```
 
 Notes:
 
 - `npm publish --access public` is required for a new scoped public package.
+- `--provenance=false` is required for the first manual local publish because npm cannot generate provenance outside a supported CI provider.
+- npm may open or print an `Authenticate your account at ...` link during publish; complete that browser verification flow if prompted.
 - Publish from the package directory because workspace packages are released independently.
 - You only need this manual bootstrap once per package name.
 
