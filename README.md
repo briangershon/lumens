@@ -127,6 +127,49 @@ Release automation is driven by Changesets on `main`:
 - GitHub Releases are created for published package tags
 - each published package gets its standalone browser bundle attached as a release asset
 
+## Releasing a package
+
+### First-time setup
+
+1. Ensure the npm scope `@briangershon` is ready for publishing.
+2. Create an npm token with publish access.
+3. Add the token to this repository's GitHub Actions secrets as `NPM_TOKEN`.
+4. Ensure GitHub Actions is enabled for the repository.
+
+### Standard release flow
+
+1. Make changes to the package you want to release.
+2. Create a changeset:
+
+```bash
+pnpm changeset
+```
+
+3. Select the package to release, such as `@briangershon/lumens-theme-button`.
+4. Choose the version bump type: `patch`, `minor`, or `major`.
+5. Commit the package changes and the generated changeset file.
+6. Merge that branch to `main`.
+
+Once the change reaches `main`, GitHub Actions will:
+
+- build the workspace
+- publish only the changed package to npm
+- create the GitHub Release for that package version
+- upload the package browser bundle as a release asset
+
+### Manual fallback
+
+If you ever need to publish manually instead of using the GitHub workflow:
+
+```bash
+pnpm changeset
+pnpm run version-packages
+pnpm run build
+pnpm run release
+```
+
+This publishes from your local machine, so the GitHub Actions flow should remain the default.
+
 ## GitHub Pages
 
 The GitHub Pages workflow builds `apps/docs/dist` and deploys it as the shared public demo site for all workspace components.
