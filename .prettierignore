@@ -3,3 +3,4 @@ apps/docs/dist
 packages/*/dist
 dist
 site
+pnpm-lock.yaml

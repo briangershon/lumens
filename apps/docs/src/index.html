@@ -178,7 +178,6 @@
 
       .preview-stage {
         display: grid;
-        place-items: center;
         min-height: 280px;
         border-radius: 22px;
         background:
@@ -190,6 +189,11 @@
             transparent 12px,
             transparent 24px
           );
+        padding: 1rem;
+      }
+
+      .preview-stage.centered {
+        place-items: center;
       }
 
       .controls {
@@ -205,6 +209,12 @@
       .control-row {
         display: grid;
         gap: 0.5rem;
+      }
+
+      .controls-empty {
+        color: var(--text-muted);
+        font-size: 0.92rem;
+        line-height: 1.6;
       }
 
       .guide-section {
@@ -260,6 +270,135 @@
         line-height: 1.6;
       }
 
+      .banner-grid {
+        display: grid;
+        gap: 1rem;
+        width: 100%;
+      }
+
+      .banner-variant {
+        display: grid;
+        gap: 0.75rem;
+      }
+
+      .banner-surface {
+        position: relative;
+        overflow: hidden;
+        min-height: 260px;
+        border: 1px solid rgba(56, 76, 109, 0.14);
+        border-radius: 26px;
+        background:
+          radial-gradient(
+            circle at top left,
+            rgba(163, 191, 233, 0.18),
+            transparent 40%
+          ),
+          linear-gradient(180deg, #faf8f3 0%, #f4f1ea 100%);
+        box-shadow:
+          0 24px 80px rgba(40, 57, 84, 0.09),
+          inset 0 1px 0 rgba(255, 255, 255, 0.85);
+      }
+
+      .banner-surface::before {
+        content: '';
+        position: absolute;
+        inset: 16px;
+        border: 1px solid rgba(67, 91, 126, 0.08);
+        border-radius: 20px;
+        pointer-events: none;
+      }
+
+      .banner-surface.dark {
+        border-color: rgba(170, 206, 255, 0.14);
+        background:
+          radial-gradient(
+            circle at top left,
+            rgba(77, 127, 194, 0.18),
+            transparent 42%
+          ),
+          linear-gradient(180deg, rgba(12, 22, 38, 0.96), rgba(6, 12, 24, 0.96));
+        box-shadow:
+          0 24px 80px rgba(0, 0, 0, 0.34),
+          inset 0 1px 0 rgba(214, 233, 255, 0.08);
+      }
+
+      .banner-surface.dark::before {
+        border-color: rgba(176, 213, 255, 0.12);
+      }
+
+      .banner-embed {
+        position: relative;
+        width: 100%;
+        height: 100%;
+      }
+
+      .banner-embed lumens-starmap-banner {
+        display: block;
+        width: 100%;
+        min-height: 260px;
+        aspect-ratio: 2 / 1;
+      }
+
+      .banner-note {
+        position: absolute;
+        left: 18px;
+        right: 18px;
+        bottom: 18px;
+        display: grid;
+        gap: 0.2rem;
+        padding: 0.8rem 0.9rem;
+        background: rgba(255, 255, 255, 0.68);
+        border: 1px solid rgba(58, 78, 111, 0.12);
+        border-radius: 14px;
+        box-shadow: 0 12px 28px rgba(39, 55, 86, 0.08);
+        backdrop-filter: blur(8px);
+      }
+
+      .banner-note strong {
+        color: #20314a;
+        font:
+          600 0.95rem/1.2 system-ui,
+          sans-serif;
+      }
+
+      .banner-note span,
+      .banner-variant-meta p {
+        color: var(--text-muted);
+        font:
+          500 0.88rem/1.5 system-ui,
+          sans-serif;
+      }
+
+      .banner-surface.dark .banner-note {
+        background: rgba(7, 16, 29, 0.62);
+        border-color: rgba(167, 205, 255, 0.14);
+        box-shadow: 0 14px 32px rgba(0, 0, 0, 0.24);
+      }
+
+      .banner-surface.dark .banner-note strong {
+        color: #edf4ff;
+      }
+
+      .banner-surface.dark .banner-note span,
+      .banner-surface.dark + .banner-variant-meta p,
+      .banner-surface.dark + .banner-variant-meta h3 {
+        color: #aabbd4;
+      }
+
+      .banner-variant-meta {
+        display: grid;
+        gap: 0.3rem;
+      }
+
+      .banner-variant-meta h3 {
+        margin: 0;
+        font-size: 1rem;
+      }
+
+      .banner-variant-meta p {
+        margin: 0;
+      }
+
       @media (max-width: 860px) {
         .component-layout {
           grid-template-columns: 1fr;
@@ -309,8 +448,218 @@
         target.textContent = `[${timestamp}] ${message}\n${target.textContent}`;
       };
 
+      const formatAttributes = (attributes = {}) =>
+        Object.entries(attributes)
+          .map(([name, value]) =>
+            value === '' ? name : `${name}="${String(value)}"`
+          )
+          .join(' ');
+
+      const createCodeSamples = (component) => {
+        const preview = component.docs.preview ?? { kind: 'mode-toggle' };
+
+        if (preview.kind === 'starmap-banner') {
+          const attributes = formatAttributes(
+            preview.variants?.[0]?.attributes ?? {
+              speed: '1800',
+              'label-limit': '14',
+              'start-time': '2026-01-15T05:00:00Z',
+            }
+          );
+
+          return {
+            importExample: `import '${component.packageName}';\n\ndocument.querySelector('${component.tagName}')?.addEventListener('${preview.eventName}', (event) => {\n  if (!event.detail.selected) return;\n  console.log(event.detail.name, event.detail.type);\n});`,
+            markupExample: `<${component.tagName}${attributes ? ` ${attributes}` : ''}></${component.tagName}>`,
+            bundleExample:
+              `<script type="module" src="./${component.browserBundleName}"></scr` +
+              `ipt>\n\n<${component.tagName}${attributes ? ` ${attributes}` : ''}></${component.tagName}>`,
+          };
+        }
+
+        const initialMode = preview.initialMode ?? component.docs.initialMode;
+        const slotText = preview.slotText ?? component.docs.slotText;
+
+        return {
+          importExample: `import '${component.packageName}';\n\ndocument.querySelector('${component.tagName}')?.addEventListener('${preview.eventName}', (event) => {\n  console.log(event.detail.mode);\n});`,
+          markupExample: `<${component.tagName} mode="${initialMode}">\n  ${slotText}\n</${component.tagName}>`,
+          bundleExample:
+            `<script type="module" src="./${component.browserBundleName}"></scr` +
+            `ipt>\n\n<${component.tagName} mode="${initialMode}">\n  ${slotText}\n</${component.tagName}>`,
+        };
+      };
+
+      const summarizeEventDetail = (detail) => {
+        if (!detail || typeof detail !== 'object') {
+          return JSON.stringify(detail);
+        }
+
+        if ('selected' in detail && detail.selected && detail.name) {
+          const parts = [
+            detail.name,
+            detail.type,
+            detail.constellation,
+            detail.magnitude == null
+              ? null
+              : `mag ${detail.magnitude.toFixed(2)}`,
+            detail.altitude == null
+              ? null
+              : `alt ${detail.altitude.toFixed(1)}°`,
+          ].filter(Boolean);
+          return parts.join(' · ');
+        }
+
+        return JSON.stringify(detail);
+      };
+
+      const renderDefaultBannerNote = (note, title) => {
+        note.querySelector('strong').textContent = title;
+        note.querySelector('span').textContent =
+          'Roll over a star or other object to see details.';
+      };
+
+      const renderBannerHoverNote = (note, detail) => {
+        const summary = [
+          detail.type,
+          detail.constellation,
+          detail.magnitude == null
+            ? null
+            : `mag ${detail.magnitude.toFixed(2)}`,
+          detail.altitude == null ? null : `alt ${detail.altitude.toFixed(1)}°`,
+          detail.distanceLy == null
+            ? null
+            : detail.distanceLy >= 100
+              ? `${Math.round(detail.distanceLy).toLocaleString()} ly away`
+              : `${detail.distanceLy.toFixed(1)} ly away`,
+        ]
+          .filter(Boolean)
+          .join(' · ');
+
+        note.querySelector('strong').textContent = detail.name;
+        note.querySelector('span').textContent =
+          summary || 'Object details available.';
+      };
+
+      const applyAttributes = (element, attributes = {}) => {
+        for (const [name, value] of Object.entries(attributes)) {
+          if (value === '') {
+            element.setAttribute(name, '');
+          } else {
+            element.setAttribute(name, String(value));
+          }
+        }
+      };
+
+      const renderModeTogglePreview = (
+        component,
+        previewStage,
+        controlsRoot,
+        eventLog
+      ) => {
+        previewStage.classList.add('centered');
+
+        const instance = document.createElement(component.tagName);
+        instance.textContent = component.docs.preview.slotText;
+        instance.mode = component.docs.preview.initialMode;
+        previewStage.append(instance);
+
+        controlsRoot.insertAdjacentHTML(
+          'beforeend',
+          `
+            <div class="control-row">
+              <label>Current mode</label>
+              <select>
+                <option value="light">light</option>
+                <option value="dark">dark</option>
+              </select>
+            </div>
+            <button type="button">Toggle via click()</button>
+          `
+        );
+
+        const modeSelect = controlsRoot.querySelector('select');
+        const triggerButton = controlsRoot.querySelector('button');
+        modeSelect.value = instance.mode;
+
+        modeSelect.addEventListener('change', () => {
+          instance.mode = modeSelect.value;
+          writeLog(eventLog, `mode preset to "${modeSelect.value}"`);
+        });
+
+        triggerButton.addEventListener('click', () => {
+          instance.click();
+        });
+
+        instance.addEventListener(component.docs.preview.eventName, (event) => {
+          modeSelect.value = event.detail.mode;
+          writeLog(
+            eventLog,
+            `${component.docs.preview.eventName} fired with detail ${JSON.stringify(event.detail)}`
+          );
+        });
+      };
+
+      const renderStarmapBannerPreview = (
+        component,
+        previewStage,
+        controlsRoot,
+        eventLog
+      ) => {
+        const bannerGrid = document.createElement('div');
+        bannerGrid.className = 'banner-grid';
+
+        for (const variant of component.docs.preview.variants ?? []) {
+          const wrapper = document.createElement('section');
+          wrapper.className = 'banner-variant';
+          wrapper.innerHTML = `
+            <div class="banner-surface${variant.hostTheme === 'dark' ? ' dark' : ''}">
+              <div class="banner-embed">
+                <div class="banner-note">
+                  <strong></strong>
+                  <span></span>
+                </div>
+              </div>
+            </div>
+            <div class="banner-variant-meta">
+              <h3>${escapeHtml(variant.title)}</h3>
+              <p>${escapeHtml(variant.description)}</p>
+            </div>
+          `;
+
+          const embed = wrapper.querySelector('.banner-embed');
+          const note = wrapper.querySelector('.banner-note');
+          const instance = document.createElement(component.tagName);
+          applyAttributes(instance, variant.attributes);
+          embed.prepend(instance);
+          renderDefaultBannerNote(note, variant.title);
+
+          instance.addEventListener(
+            component.docs.preview.eventName,
+            (event) => {
+              if (!event.detail?.selected) {
+                renderDefaultBannerNote(note, variant.title);
+                writeLog(eventLog, 'selection cleared');
+                return;
+              }
+
+              renderBannerHoverNote(note, event.detail);
+              writeLog(eventLog, summarizeEventDetail(event.detail));
+            }
+          );
+
+          bannerGrid.append(wrapper);
+        }
+
+        previewStage.append(bannerGrid);
+        controlsRoot.innerHTML = `
+          <div class="controls-empty">
+            This component is host-sized and configured through attributes. Hover the banner preview to inspect emitted object-selection details.
+          </div>
+        `;
+      };
+
       for (const component of components) {
         await import(component.bundlePath);
+        const samples = createCodeSamples(component);
 
         const article = document.createElement('article');
         article.className = 'component';
@@ -335,30 +684,16 @@
                 <div class="guide-section">
                   <div class="code-title">Use On Your Site</div>
                   <p>Import the package once, then add the custom element in your markup and listen for its events.</p>
-                  <pre><code>${escapeHtml(
-                    `import '${component.packageName}';\n\ndocument.querySelector('${component.tagName}')?.addEventListener('clicked', (event) => {\n  console.log(event.detail.mode);\n});`
-                  )}</code></pre>
-                  <pre><code>${escapeHtml(
-                    `<${component.tagName} mode="${component.docs.initialMode}">\n  ${component.docs.slotText}\n</${component.tagName}>`
-                  )}</code></pre>
+                  <pre><code>${escapeHtml(samples.importExample)}</code></pre>
+                  <pre><code>${escapeHtml(samples.markupExample)}</code></pre>
                 </div>
                 <div class="guide-section">
                   <div class="code-title">Optional Browser Bundle</div>
                   <p>If you are not installing from npm, you can load the standalone browser bundle directly.</p>
-                  <pre><code>${escapeHtml(
-                    `<script type="module" src="./${component.browserBundleName}"></scr` +
-                      `ipt>\n\n<${component.tagName} mode="${component.docs.initialMode}">\n  ${component.docs.slotText}\n</${component.tagName}>`
-                  )}</code></pre>
+                  <pre><code>${escapeHtml(samples.bundleExample)}</code></pre>
                 </div>
               </section>
-              <div class="control-row">
-                <label>Current mode</label>
-                <select>
-                  <option value="light">light</option>
-                  <option value="dark">dark</option>
-                </select>
-              </div>
-              <button type="button">Toggle via click()</button>
+              <div class="component-controls"></div>
               <div class="control-row">
                 <div class="code-title">Event Log</div>
                 <pre class="event-log">Waiting for interaction…</pre>
@@ -368,33 +703,24 @@
         `;
 
         const previewStage = article.querySelector('.preview-stage');
-        const modeSelect = article.querySelector('select');
-        const triggerButton = article.querySelector('button');
+        const controlsRoot = article.querySelector('.component-controls');
         const eventLog = article.querySelector('.event-log');
 
-        const instance = document.createElement(component.tagName);
-        instance.textContent = component.docs.slotText;
-        instance.mode = component.docs.initialMode;
-
-        modeSelect.value = instance.mode;
-        previewStage.append(instance);
-
-        modeSelect.addEventListener('change', () => {
-          instance.mode = modeSelect.value;
-          writeLog(eventLog, `mode preset to "${modeSelect.value}"`);
-        });
-
-        triggerButton.addEventListener('click', () => {
-          instance.click();
-        });
-
-        instance.addEventListener('clicked', (event) => {
-          modeSelect.value = event.detail.mode;
-          writeLog(
-            eventLog,
-            `clicked event fired with detail ${JSON.stringify(event.detail)}`
+        if (component.docs.preview.kind === 'starmap-banner') {
+          renderStarmapBannerPreview(
+            component,
+            previewStage,
+            controlsRoot,
+            eventLog
           );
-        });
+        } else {
+          renderModeTogglePreview(
+            component,
+            previewStage,
+            controlsRoot,
+            eventLog
+          );
+        }
 
         componentsRoot.append(article);
       }

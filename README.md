@@ -14,14 +14,14 @@ Lumens is a monorepo for building, previewing, and distributing multiple open-so
 
 ## Current packages
 
-- `@briangershon/lumens-theme-button`
+- `@briangershon/lumens-starmap-banner`
 
-The first package is a theme-toggle web component that:
+The current package is a decorative header component that:
 
-- supports `light` and `dark` modes
-- tracks its own current mode and flips on click
-- shows a sun icon in light mode and a moon icon in dark mode
-- emits a `clicked` event with the newly selected mode
+- renders a transparent animated sky crop inside its own shadow DOM
+- supports light and dark host surfaces via the `dark-mode` attribute
+- accepts `speed`, `label-limit`, and `start-time` attributes
+- emits `starmap-object-selected` with hover details for host-owned captions
 
 ## Workspace layout
 
@@ -85,26 +85,38 @@ pnpm run format:check
 
 ### npm package
 
-```ts
-import '@briangershon/lumens-theme-button';
+import '@briangershon/lumens-starmap-banner';
 
 document
-  .querySelector('lumens-theme-button')
-  ?.addEventListener('clicked', (event) => {
-    console.log(event.detail.mode);
-  });
-```
+.querySelector('lumens-starmap-banner')
+?.addEventListener('starmap-object-selected', (event) => {
+if (!event.detail.selected) return;
+console.log(event.detail.name, event.detail.type);
+});
+
+````
 
 ```html
-<lumens-theme-button mode="dark">Theme toggle</lumens-theme-button>
-```
+<lumens-starmap-banner
+  dark-mode
+  speed="1800"
+  label-limit="14"
+  start-time="2026-01-15T05:00:00Z"
+></lumens-starmap-banner>
+````
 
 ### Browser bundle
 
-```html
-<script type="module" src="./lumens-theme-button.bundle.js"></script>
-<lumens-theme-button mode="dark">Theme toggle</lumens-theme-button>
-```
+<script type="module" src="./lumens-starmap-banner.bundle.js"></script>
+
+<lumens-starmap-banner
+speed="1800"
+label-limit="14"
+start-time="2026-01-15T05:00:00Z"
+
+> </lumens-starmap-banner>
+
+````
 
 ## Versioning and releases
 
@@ -112,7 +124,7 @@ Create a changeset for package changes:
 
 ```bash
 pnpm changeset
-```
+````
 
 Version packages locally:
 
@@ -142,7 +154,7 @@ pnpm run build
 4. Publish that package manually once so it is established on npm. For the current package:
 
 ```bash
-cd packages/lumens-theme-button
+cd packages/lumens-starmap-banner
 npm publish --access public
 ```
 
@@ -164,7 +176,7 @@ Notes for the first manual publish:
 pnpm changeset
 ```
 
-3. Select the package to release, such as `@briangershon/lumens-theme-button`.
+3. Select the package to release, such as `@briangershon/lumens-starmap-banner`.
 4. Choose the version bump type: `patch`, `minor`, or `major`.
 5. Commit the package changes and the generated changeset file.
 6. Merge that branch to `main`.
