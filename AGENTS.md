@@ -39,7 +39,7 @@ Do not move agent-specific instructions into `README.md` unless there is a human
 - Preserve Changesets as the release/versioning mechanism unless the release strategy is intentionally redesigned.
 - Use Node.js 24 consistently in GitHub Actions unless the repo intentionally changes its runtime baseline.
 - Keep GitHub Actions dependencies on Node-24-compatible majors; currently that means `actions/checkout@v6`, `actions/setup-node@v6`, `pnpm/action-setup@v6`, and `actions/upload-pages-artifact@v4`.
-- Name Lumens component packages and custom element tags with the `lumens` prefix, for example `@briangershon/lumens-theme-button` and `lumens-theme-button`.
+- Name Lumens component packages and custom element tags with the `lumens` prefix, for example `@briangershon/lumens-starmap-banner` and `lumens-starmap-banner`.
 - Keep public package usage centered on importing scoped packages or per-package browser bundles.
 - If a package API changes, update its docs/demo presentation in `apps/docs` and the root `README.md`.
 - When rendering code examples inside the docs page's inline script, do not embed a literal `</script>` sequence in the source; generate it indirectly so the browser does not terminate the script early.

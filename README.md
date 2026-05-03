@@ -14,17 +14,9 @@ Lumens is a monorepo for building, previewing, and distributing multiple open-so
 
 ## Current packages
 
-- `@briangershon/lumens-theme-button`
 - `@briangershon/lumens-starmap-banner`
 
-The first package is a theme-toggle web component that:
-
-- supports `light` and `dark` modes
-- tracks its own current mode and flips on click
-- shows a sun icon in light mode and a moon icon in dark mode
-- emits a `clicked` event with the newly selected mode
-
-The starmap banner package is a decorative header component that:
+The current package is a decorative header component that:
 
 - renders a transparent animated sky crop inside its own shadow DOM
 - supports light and dark host surfaces via the `dark-mode` attribute
@@ -93,21 +85,6 @@ pnpm run format:check
 
 ### npm package
 
-```ts
-import '@briangershon/lumens-theme-button';
-
-document
-  .querySelector('lumens-theme-button')
-  ?.addEventListener('clicked', (event) => {
-    console.log(event.detail.mode);
-  });
-```
-
-```html
-<lumens-theme-button mode="dark">Theme toggle</lumens-theme-button>
-```
-
-```ts
 import '@briangershon/lumens-starmap-banner';
 
 document
@@ -129,12 +106,6 @@ document
 
 ### Browser bundle
 
-```html
-<script type="module" src="./lumens-theme-button.bundle.js"></script>
-<lumens-theme-button mode="dark">Theme toggle</lumens-theme-button>
-```
-
-```html
 <script type="module" src="./lumens-starmap-banner.bundle.js"></script>
 <lumens-starmap-banner
   speed="1800"
@@ -179,7 +150,7 @@ pnpm run build
 4. Publish that package manually once so it is established on npm. For the current package:
 
 ```bash
-cd packages/lumens-theme-button
+cd packages/lumens-starmap-banner
 npm publish --access public
 ```
 
@@ -201,7 +172,7 @@ Notes for the first manual publish:
 pnpm changeset
 ```
 
-3. Select the package to release, such as `@briangershon/lumens-theme-button`.
+3. Select the package to release, such as `@briangershon/lumens-starmap-banner`.
 4. Choose the version bump type: `patch`, `minor`, or `major`.
 5. Commit the package changes and the generated changeset file.
 6. Merge that branch to `main`.

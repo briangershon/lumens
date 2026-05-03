@@ -23,7 +23,7 @@ Expected output is written to `dist/` by the shared build scripts.
 
 ## package.json pattern
 
-Follow the same structure used by `packages/lumens-theme-button/package.json`:
+Follow the same structure used by existing packages in `packages/`:
 
 - `name` set to the scoped package name
 - `type: "module"`
@@ -40,7 +40,7 @@ Follow the same structure used by `packages/lumens-theme-button/package.json`:
   - `displayName`
   - `docs.summary`
   - `docs.slotText`
-  - `docs.initialMode`
+  - `docs.preview`
 
 The docs app consumes this `webComponent` metadata through the generated `components.json` manifest.
 
@@ -58,7 +58,7 @@ Follow the same package-local `tsconfig.json` shape:
 
 ## Component implementation pattern
 
-Follow the same component authoring style used in `packages/lumens-theme-button/src/index.ts`:
+Follow the same component authoring style used in existing package entrypoints under `packages/*/src/index.ts`:
 
 - define the component in `src/index.ts`
 - register one custom element from that entrypoint
