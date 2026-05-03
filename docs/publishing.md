@@ -90,9 +90,18 @@ pnpm changeset
 Once the change reaches `main`, GitHub Actions will:
 
 - build the workspace
+- open or update the Changesets release PR with the bumped package versions
+
+When you are ready to publish, merge the generated release PR. On that subsequent `main` run, GitHub Actions will:
+
+- build the workspace again
 - publish only the changed package to npm
 - create the GitHub Release for that package version
 - upload the package browser bundle as a release asset
+
+This is the recommended default because the `.changeset/*.md` file stays visible in feature PR review and release timing remains explicit.
+
+If you intentionally want publish-on-merge for a specific release, you can still run `pnpm run version-packages` locally before merging. That bypasses the release PR for that branch and lets the next `main` push publish immediately.
 
 ## Manual fallback release
 

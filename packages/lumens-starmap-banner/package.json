@@ -37,41 +37,5 @@
     "banner",
     "astronomy",
     "hero"
-  ],
-  "webComponent": {
-    "tagName": "lumens-starmap-banner",
-    "bundleName": "lumens-starmap-banner.bundle.js",
-    "displayName": "Lumens Starmap Banner",
-    "docs": {
-      "summary": "An open-source starmap banner with visible stars, constellations, exotic unseen objects like black holes, hover details, and light or dark host support.",
-      "slotText": "Starmap banner",
-      "preview": {
-        "kind": "starmap-banner",
-        "eventName": "starmap-object-selected",
-        "variants": [
-          {
-            "title": "Light host background",
-            "description": "The host frame supplies the pale surface while the component keeps its foreground tuned for bright layouts.",
-            "hostTheme": "light",
-            "attributes": {
-              "speed": "1800",
-              "label-limit": "14",
-              "start-time": "2026-01-15T05:00:00Z"
-            }
-          },
-          {
-            "title": "Dark host background",
-            "description": "The host frame owns the dark treatment while the component switches to its higher-contrast foreground palette.",
-            "hostTheme": "dark",
-            "attributes": {
-              "dark-mode": "",
-              "speed": "1800",
-              "label-limit": "14",
-              "start-time": "2026-01-15T05:00:00Z"
-            }
-          }
-        ]
-      }
-    }
-  }
+  ]
 }

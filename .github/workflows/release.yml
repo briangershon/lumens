@@ -20,24 +20,12 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Detect pending changesets
-        id: changesets
-        shell: bash
-        run: |
-          if find .changeset -maxdepth 1 -type f -name '*.md' | grep -q .; then
-            echo "has_changesets=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "has_changesets=false" >> "$GITHUB_OUTPUT"
-          fi
-
       - name: Setup pnpm
-        if: steps.changesets.outputs.has_changesets == 'true'
         uses: pnpm/action-setup@v6
         with:
           version: 9.6.0
 
       - name: Setup Node
-        if: steps.changesets.outputs.has_changesets == 'true'
         uses: actions/setup-node@v6
         with:
           node-version: 24
@@ -45,15 +33,12 @@ jobs:
           registry-url: https://registry.npmjs.org
 
       - name: Install dependencies
-        if: steps.changesets.outputs.has_changesets == 'true'
         run: pnpm install --frozen-lockfile
 
       - name: Build packages and docs
-        if: steps.changesets.outputs.has_changesets == 'true'
         run: pnpm run build
 
       - name: Version or publish packages
-        if: steps.changesets.outputs.has_changesets == 'true'
         uses: changesets/action@v1
         with:
           version: pnpm run version-packages
@@ -61,7 +46,3 @@ jobs:
           createGithubReleases: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Skip release
-        if: steps.changesets.outputs.has_changesets != 'true'
-        run: echo "No pending changeset markdown files found. Skipping release steps."

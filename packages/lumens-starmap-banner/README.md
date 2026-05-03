@@ -18,14 +18,14 @@ import '@briangershon/lumens-starmap-banner';
 <lumens-starmap-banner></lumens-starmap-banner>
 ```
 
-For the full installation and usage guide, including browser-bundle usage and event-listening examples, use the canonical docs page:
-[https://briangershon.github.io/lumens/getting-started.html](https://briangershon.github.io/lumens/getting-started.html)
+For the full installation and usage guide, including browser-bundle usage and event-listening examples, use the dedicated component docs page:
+[https://briangershon.github.io/lumens/components/lumens-starmap-banner.html](https://briangershon.github.io/lumens/components/lumens-starmap-banner.html)
 
 ## Attributes and properties
 
 | Attribute     | Property     | Type      | Default                    | Notes                                                                  |
 | ------------- | ------------ | --------- | -------------------------- | ---------------------------------------------------------------------- |
-| `speed`       | `speed`      | `number`  | `1800`                     | Positive number controlling simulated time progression.                |
+| `speed`       | `speed`      | `number`  | `900`                      | Positive number controlling simulated time progression.                |
 | `label-limit` | `labelLimit` | `number`  | `14`                       | Positive integer limit for visible labels.                             |
 | `start-time`  | `startTime`  | `string`  | `2026-01-15T05:00:00.000Z` | ISO timestamp used as the initial sky state.                           |
 | `dark-mode`   | `darkMode`   | `boolean` | `false`                    | Enables the higher-contrast foreground palette for dark host surfaces. |
@@ -55,7 +55,7 @@ When `detail.selected` is `false`, the rest of the fields are `null`.
 
 ## Demo and docs
 
-- Canonical install and usage guide: [https://briangershon.github.io/lumens/getting-started.html](https://briangershon.github.io/lumens/getting-started.html)
+- Canonical install and usage guide: [https://briangershon.github.io/lumens/components/lumens-starmap-banner.html](https://briangershon.github.io/lumens/components/lumens-starmap-banner.html)
 - Repository and workspace docs: https://github.com/briangershon/lumens#readme
 
 ## License

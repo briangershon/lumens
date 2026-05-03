@@ -59,15 +59,6 @@ Follow the same structure used by existing packages in `packages/`:
   - the main module entry (`./dist/index.js`)
   - the standalone browser bundle (`./dist/lumens-<name>.bundle.js`)
 - `main`, `module`, and `types` pointed at `dist`
-- `webComponent` metadata with:
-  - `tagName`
-  - `bundleName`
-  - `displayName`
-  - `docs.summary`
-  - `docs.slotText`
-  - `docs.preview`
-
-The docs app consumes this `webComponent` metadata through the generated `components.json` manifest.
 
 ## tsconfig pattern
 
@@ -106,7 +97,8 @@ Every component package should work with the shared monorepo flows without packa
 - keep the public entrypoint types self-contained so the published package can ship a single `dist/index.d.ts`
 - do not distribute JavaScript or declaration source maps in published package output
 - shared docs build copies the browser bundle into `apps/docs/dist/assets/...`
-- the docs app should automatically render a component card from package metadata
+- add or update the docs index entry in `apps/docs/src/index.html`
+- add or update the dedicated component guide in `apps/docs/src/components/`
 
 ## npm publishing expectations
 
@@ -127,8 +119,8 @@ Before publishing a package, verify the npm-facing package contract:
 1. Create `packages/lumens-<name>/`.
 2. Add `package.json`, `README.md`, `src/index.ts`, and `tsconfig.json`.
 3. Fill in npm-facing metadata, including `description`, `keywords`, `repository`, `homepage`, and `bugs`.
-4. Fill in `webComponent` metadata for docs rendering.
-5. Implement and register the custom element.
+4. Implement and register the custom element.
+5. Add or update the visual docs index entry and the dedicated component docs page.
 6. Run:
 
 ```bash
@@ -137,5 +129,5 @@ pnpm run check
 ```
 
 7. Review package contents with `npm pack --dry-run`.
-8. Verify the new component appears in the shared docs app.
+8. Verify the new component appears in the shared docs app and has a dedicated guide.
 9. Add a changeset when the package is ready to release.

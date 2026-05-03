@@ -36,11 +36,11 @@ export async function getComponentPackages() {
     }
 
     const manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
-    const webComponent = manifest.webComponent ?? {};
-    const docs = webComponent.docs ?? {};
-    const fallbackSlotText =
-      docs.slotText ?? webComponent.displayName ?? entry.name;
-    const fallbackInitialMode = docs.initialMode ?? 'light';
+    const bundleExport = manifest.exports?.['./bundle'];
+    const bundlePath =
+      typeof bundleExport === 'string'
+        ? bundleExport
+        : (bundleExport?.default ?? bundleExport?.import);
 
     components.push({
       dirName: entry.name,
@@ -51,22 +51,9 @@ export async function getComponentPackages() {
       description: manifest.description ?? '',
       sourceEntry: path.join(packageDir, 'src', 'index.ts'),
       tsconfigPath: path.join(packageDir, 'tsconfig.json'),
-      bundleName: webComponent.bundleName ?? `${entry.name}.bundle.js`,
-      tagName: webComponent.tagName ?? entry.name,
-      displayName: webComponent.displayName ?? entry.name,
-      docs: {
-        summary: docs.summary ?? manifest.description ?? '',
-        slotText: fallbackSlotText,
-        initialMode: fallbackInitialMode,
-        preview: {
-          kind: docs.preview?.kind ?? 'mode-toggle',
-          eventName: docs.preview?.eventName ?? 'clicked',
-          control: docs.preview?.control ?? 'mode',
-          slotText: docs.preview?.slotText ?? fallbackSlotText,
-          initialMode: docs.preview?.initialMode ?? fallbackInitialMode,
-          variants: docs.preview?.variants ?? [],
-        },
-      },
+      bundleName: bundlePath
+        ? path.basename(bundlePath)
+        : `${entry.name}.bundle.js`,
     });
   }
 

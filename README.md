@@ -38,15 +38,18 @@ import '@briangershon/lumens-starmap-banner';
 <lumens-starmap-banner></lumens-starmap-banner>
 ```
 
-For the full install and usage guide, use the canonical docs page:
-[https://briangershon.github.io/lumens/getting-started.html](https://briangershon.github.io/lumens/getting-started.html)
+For the full install and usage guide, use the dedicated component docs page:
+[https://briangershon.github.io/lumens/components/lumens-starmap-banner.html](https://briangershon.github.io/lumens/components/lumens-starmap-banner.html)
 
 ## Explore the docs
 
 `apps/docs` is the shared public showcase and development playground. It loads built package artifacts rather than source-only imports so the demos reflect what consumers actually install.
 
-Canonical install and usage guide:
-[https://briangershon.github.io/lumens/getting-started.html](https://briangershon.github.io/lumens/getting-started.html)
+Visual docs index:
+[https://briangershon.github.io/lumens/](https://briangershon.github.io/lumens/)
+
+Canonical starmap banner guide:
+[https://briangershon.github.io/lumens/components/lumens-starmap-banner.html](https://briangershon.github.io/lumens/components/lumens-starmap-banner.html)
 
 Run it locally:
 
@@ -112,6 +115,8 @@ Release automation is driven by Changesets on `main`:
 - packages are published to npm
 - GitHub Releases are created for published package tags
 - each published package gets its standalone browser bundle attached as a release asset
+- feature branches should merge release intent as `.changeset/*.md` files
+- GitHub Actions maintains the release PR and publishes when that PR is merged
 
 ## Releasing a package
 
@@ -158,11 +163,18 @@ pnpm changeset
 Once the change reaches `main`, GitHub Actions will:
 
 - build the workspace
+- open or update the Changesets release PR with the bumped package versions
+
+When you are ready to publish, merge the generated release PR. On that subsequent `main` run, GitHub Actions will:
+
+- build the workspace again
 - publish only the changed package to npm
 - create the GitHub Release for that package version
 - upload the package browser bundle as a release asset
 
 This automated publish flow assumes npm Trusted Publishing has already been configured for the package.
+
+If you intentionally want publish-on-merge for a specific release, you can still run `pnpm run version-packages` locally before merging. That bypasses the release PR for that branch and lets the next `main` push publish immediately.
 
 ### Manual fallback
 

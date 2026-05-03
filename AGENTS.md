@@ -35,6 +35,30 @@ This repository is Lumens, a monorepo for building, testing, previewing, and rel
 
 Do not move agent-specific instructions into `README.md` unless there is a human-facing reason.
 
+## Docs Conventions
+
+- Treat `apps/docs/src/index.html` as the visual docs index: discovery, positioning, preview, and links into component-specific guides.
+- Give each published component its own dedicated canonical docs page under `apps/docs/src/components/`.
+- Optimize each component page to work as an LLM base and a human reference from one URL.
+- Keep the component page structure explicit and stable. At minimum include:
+  - component identity
+  - one-sentence purpose
+  - install command
+  - import statement
+  - minimal markup example
+  - browser-bundle usage
+  - attributes
+  - properties
+  - events
+  - one starter integration example
+  - behavior or host-layout expectations when relevant
+- When a component's primary integration value comes from emitted events, show a realistic host-response example in the docs page rather than only listing the event API.
+- For `lumens-starmap-banner`, preserve the host-owned hover detail overlay as the recommended example response to `starmap-object-selected`.
+- Prefer explicit HTML content on component pages over manifest-driven API generation.
+- Use stable fragment anchors on component pages for key sections such as install, properties, events, and example.
+- If a package API or recommended interaction pattern changes, update its dedicated docs page, starter example, live preview treatment, package `README.md`, and relevant index links together.
+- When changing docs visuals, especially translucent hero surfaces, overlays, chips, or theme-sensitive panels, verify text and UI contrast remains readable in both light and dark modes.
+
 ## Editing Guardrails
 
 - Preserve the `pnpm` workspace structure.
@@ -47,6 +71,7 @@ Do not move agent-specific instructions into `README.md` unless there is a human
 - Keep public package usage centered on importing scoped packages or per-package browser bundles.
 - Prefer linking duplicated consumer install/use guidance back to `apps/docs` instead of copying the same walkthrough into multiple files.
 - If a package API changes, update its docs/demo presentation in `apps/docs` and the root `README.md`.
+- Preserve the docs pattern of one visual index plus one canonical page per component unless the docs architecture is intentionally redesigned.
 - When rendering code examples inside the docs page's inline script, do not embed a literal `</script>` sequence in the source; generate it indirectly so the browser does not terminate the script early.
 - If bundle paths or dist contracts change, update the docs build and release workflows together.
 - GitHub Pages may require a one-time manual enablement in GitHub before the workflow can publish successfully. In repository settings, use `Settings > Pages > Build and deployment > Source > GitHub Actions` as the publishing source; preserve that assumption when troubleshooting Pages setup.

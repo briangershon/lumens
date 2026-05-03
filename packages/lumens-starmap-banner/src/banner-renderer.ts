@@ -133,6 +133,31 @@ function hashPhase(id: string): number {
   return (hash / 10000) * Math.PI * 2;
 }
 
+type LabelCandidate = {
+  obj: FixedObject;
+  point: Point;
+  priority: number;
+};
+
+type PlacedLabel = {
+  box: LabelBox;
+};
+
+function boxesOverlap(a: LabelBox, b: LabelBox): boolean {
+  return (
+    a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top
+  );
+}
+
+function loosenBox(box: LabelBox, inset: number): LabelBox {
+  return {
+    left: box.left + inset,
+    top: box.top + inset,
+    right: box.right - inset,
+    bottom: box.bottom - inset,
+  };
+}
+
 export function createBannerRenderer(
   canvas: HTMLCanvasElement,
   scene: Partial<BannerSceneOptions> = {}
@@ -163,19 +188,31 @@ export function createBannerRenderer(
   let radius = 720;
   let centerX = width * options.cropCenterX;
   let centerY = height * options.cropCenterY;
-  let lastLabelBoxes: LabelBox[] = [];
+  let previousLabelIds: string[] = [];
 
   function resize(): void {
     const rect = canvas.getBoundingClientRect();
-    dpr = window.devicePixelRatio || 1;
-    width = Math.max(320, Math.floor(rect.width || 1200));
-    height = Math.max(160, Math.floor(rect.height || Math.round(width / 2)));
+    const nextDpr = window.devicePixelRatio || 1;
+    const nextWidth = Math.max(320, Math.floor(rect.width || 1200));
+    const nextHeight = Math.max(
+      160,
+      Math.floor(rect.height || Math.round(nextWidth / 2))
+    );
+
+    if (nextDpr === dpr && nextWidth === width && nextHeight === height) {
+      return;
+    }
+
+    dpr = nextDpr;
+    width = nextWidth;
+    height = nextHeight;
     canvas.width = width * dpr;
     canvas.height = height * dpr;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     radius = Math.max(width, height) * options.radiusScale;
     centerX = width * options.cropCenterX;
     centerY = height * options.cropCenterY;
+    previousLabelIds = [];
   }
 
   function project(altitude: number, azimuth: number): Point {
@@ -295,7 +332,7 @@ export function createBannerRenderer(
       obj.group === 'magnetar'
     ) {
       const compactGlowAlpha =
-        palette.compactGlowBase + Math.sin(timeSeconds * 0.4 + phase) * 0.02;
+        palette.compactGlowBase + Math.sin(timeSeconds * 0.18 + phase) * 0.006;
       drawStarGlow(x, y, baseRadius, COMPACT_OBJECT_TINT, compactGlowAlpha);
       ctx.fillStyle = palette.compactFill;
       ctx.beginPath();
@@ -330,7 +367,7 @@ export function createBannerRenderer(
         ? palette.starGlowBaseBright
         : palette.starGlowBaseNormal;
     const glowAlpha =
-      glowBaseAlpha + Math.sin(timeSeconds * 0.35 + phase) * 0.012;
+      glowBaseAlpha + Math.sin(timeSeconds * 0.16 + phase) * 0.004;
     drawStarGlow(x, y, baseRadius, tint, glowAlpha);
     ctx.fillStyle = colorString(tint);
     ctx.beginPath();
@@ -338,7 +375,7 @@ export function createBannerRenderer(
     ctx.fill();
 
     if (obj.mag != null && obj.mag < 0.8) {
-      const shimmer = 0.65 + Math.sin(timeSeconds * 1.2 + phase) * 0.2;
+      const shimmer = 0.68 + Math.sin(timeSeconds * 0.45 + phase) * 0.06;
       ctx.strokeStyle = palette.heroShimmer(shimmer * 0.32);
       ctx.lineWidth = 1;
       ctx.beginPath();
@@ -359,20 +396,22 @@ export function createBannerRenderer(
     return Math.min(left, right, top, bottom);
   }
 
-  function drawLabels(
-    candidates: Array<{ obj: FixedObject; point: Point; priority: number }>,
-    timeSeconds: number
-  ): void {
-    lastLabelBoxes = [];
-    let placed = 0;
-    for (const entry of candidates) {
-      if (placed >= options.labelLimit) break;
+  function drawLabels(candidates: LabelCandidate[]): void {
+    const nextLabelIds: string[] = [];
+    const nextLabelIdSet = new Set<string>();
+    const placedLabels: PlacedLabel[] = [];
+    const candidateById = new Map(
+      candidates.map((entry) => [entry.obj.id, entry])
+    );
+
+    const tryPlaceLabel = (
+      entry: LabelCandidate,
+      retainPrevious: boolean
+    ): boolean => {
       const { obj, point, priority } = entry;
       const edgeAlpha = visibleLabelAlpha(point.x, point.y);
-      if (edgeAlpha <= 0.08) continue;
-      const pulse =
-        0.92 + Math.sin(timeSeconds * 0.5 + hashPhase(obj.id)) * 0.08;
-      const alpha = edgeAlpha * pulse;
+      const minAlpha = retainPrevious ? 0.04 : 0.1;
+      if (edgeAlpha <= minAlpha) return false;
       ctx.font = labelFontForPriority(priority);
       const text = obj.name;
       const widthPx = ctx.measureText(text).width;
@@ -384,20 +423,35 @@ export function createBannerRenderer(
         right: x + widthPx + 4,
         bottom: y + 7,
       };
-      const overlaps = lastLabelBoxes.some(
-        (placedBox) =>
-          box.left < placedBox.right &&
-          box.right > placedBox.left &&
-          box.top < placedBox.bottom &&
-          box.bottom > placedBox.top
-      );
-      if (overlaps) continue;
-      lastLabelBoxes.push(box);
-      placed += 1;
 
-      ctx.fillStyle = palette.label(alpha);
+      const collisionBox = retainPrevious ? loosenBox(box, 2) : box;
+      const overlaps = placedLabels.some(({ box: placedBox }) =>
+        boxesOverlap(collisionBox, placedBox)
+      );
+      if (overlaps) return false;
+
+      placedLabels.push({ box });
+      nextLabelIds.push(obj.id);
+      nextLabelIdSet.add(obj.id);
+      ctx.fillStyle = palette.label(edgeAlpha * 0.96);
       ctx.fillText(text, x, y);
+      return true;
+    };
+
+    for (const id of previousLabelIds) {
+      if (nextLabelIds.length >= options.labelLimit) break;
+      const entry = candidateById.get(id);
+      if (!entry) continue;
+      tryPlaceLabel(entry, true);
     }
+
+    for (const entry of candidates) {
+      if (nextLabelIds.length >= options.labelLimit) break;
+      if (nextLabelIdSet.has(entry.obj.id)) continue;
+      tryPlaceLabel(entry, false);
+    }
+
+    previousLabelIds = nextLabelIds;
   }
 
   function drawSelection(
@@ -500,7 +554,7 @@ export function createBannerRenderer(
       if (b.priority !== a.priority) return b.priority - a.priority;
       return (a.obj.mag ?? 99) - (b.obj.mag ?? 99);
     });
-    drawLabels(labelCandidates, timeSeconds);
+    drawLabels(labelCandidates);
     drawSelection(selectedId, altAzById, timeSeconds);
     return visible;
   }
