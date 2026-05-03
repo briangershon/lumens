@@ -68,8 +68,14 @@ After the first manual publish succeeds:
 
 1. Open the package settings in npm.
 2. Enable Trusted Publishing for this GitHub repository and its release workflow.
-3. Ensure GitHub Actions is enabled for the repository.
-4. In GitHub repository settings, allow GitHub Actions to create pull requests:
+3. In the npm Trusted Publisher form, use:
+   - GitHub repository owner: `briangershon`
+   - GitHub repository name: `lumens`
+   - Workflow filename: `release.yml`
+4. Ensure the trusted publisher is configured for the package you manually bootstrapped, such as `@briangershon/lumens-starmap-banner`.
+   The repository name must be the monorepo repository, `lumens`, not the package name.
+5. Ensure GitHub Actions is enabled for the repository.
+6. In GitHub repository settings, allow GitHub Actions to create pull requests:
    `Settings > Actions > General > Workflow permissions > Allow GitHub Actions to create and approve pull requests`
 
 The release workflow already expects Trusted Publishing and requests `id-token: write` so npm provenance can be generated automatically.

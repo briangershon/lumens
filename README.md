@@ -121,33 +121,9 @@ Release automation is driven by Changesets on `main`:
 
 ## Releasing a package
 
-### First-time setup
+See [docs/publishing.md](docs/publishing.md) for the canonical first-time publish setup, Trusted Publishing configuration, and release troubleshooting steps.
 
-1. Ensure the npm scope `@briangershon` is ready for publishing.
-2. Run `npm login` locally with an account that has publish access to the `@briangershon` scope.
-3. Build the package you want to publish:
-
-```bash
-pnpm run build
-```
-
-4. Publish that package manually once so it is established on npm. For the current package:
-
-```bash
-cd packages/lumens-starmap-banner
-npm publish --access public
-```
-
-5. In npm package settings, enable Trusted Publishing for this GitHub repository/workflow so GitHub Actions can publish future releases without a stored npm token.
-6. Ensure GitHub Actions is enabled for the repository.
-
-Notes for the first manual publish:
-
-- `npm publish --access public` is required for new scoped public packages.
-- The package publishes from its own directory because each workspace package is released independently.
-- You only need this manual bootstrap once per new package name.
-
-### Standard release flow
+Standard release flow:
 
 1. Make changes to the package you want to release.
 2. Create a changeset:
@@ -178,7 +154,7 @@ This automated publish flow assumes npm Trusted Publishing has already been conf
 
 If you intentionally want publish-on-merge for a specific release, you can still run `pnpm run version-packages` locally before merging. That bypasses the release PR for that branch and lets the next `main` push publish immediately.
 
-### Manual fallback
+Manual fallback:
 
 If you ever need to publish manually instead of using the GitHub workflow:
 
