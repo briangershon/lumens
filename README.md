@@ -113,6 +113,7 @@ Release automation is driven by Changesets on `main`:
 
 - changed packages are versioned independently
 - packages are published to npm
+- package `CHANGELOG.md` files are updated automatically during versioning
 - GitHub Releases are created for published package tags
 - each published package gets its standalone browser bundle attached as a release asset
 - feature branches should merge release intent as `.changeset/*.md` files
@@ -164,6 +165,7 @@ Once the change reaches `main`, GitHub Actions will:
 
 - build the workspace
 - open or update the Changesets release PR with the bumped package versions
+- update or create the released package `CHANGELOG.md` files
 
 When you are ready to publish, merge the generated release PR. On that subsequent `main` run, GitHub Actions will:
 
