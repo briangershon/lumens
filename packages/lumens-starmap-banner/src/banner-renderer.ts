@@ -1,5 +1,11 @@
-// @ts-nocheck
-
+import type {
+  AltAz,
+  BannerSceneOptions,
+  Constellation,
+  FixedObject,
+  LabelBox,
+  Point,
+} from './types.js';
 import { FIXED_OBJECTS } from './data/stars.js';
 import { CONSTELLATIONS } from './data/constellations.js';
 
@@ -13,12 +19,12 @@ const DEFAULT_SCENE = {
   glowDriftPx: 14,
   labelLimit: 14,
   darkMode: false,
-};
+} as const satisfies BannerSceneOptions;
 
 const PALETTES = {
   light: {
     constellation: 'rgba(55, 93, 149, 0.16)',
-    label: (alpha) => `rgba(37, 57, 89, ${alpha})`,
+    label: (alpha: number) => `rgba(37, 57, 89, ${alpha})`,
     blackHoleRing: 'rgba(68, 117, 172, 0.62)',
     blackHoleAccretion: 'rgba(196, 149, 92, 0.56)',
     blackHoleCore: 'rgba(20, 27, 41, 0.96)',
@@ -26,7 +32,7 @@ const PALETTES = {
     compactRing: 'rgba(167, 198, 240, 0.6)',
     pulsarAccent: 'rgba(93, 173, 214, 0.44)',
     magnetarAccent: 'rgba(137, 108, 197, 0.48)',
-    heroShimmer: (alpha) => `rgba(94, 122, 170, ${alpha})`,
+    heroShimmer: (alpha: number) => `rgba(94, 122, 170, ${alpha})`,
     selectionRing: 'rgba(221, 168, 79, 0.92)',
     selectionGlow: 'rgba(241, 208, 136, 0.24)',
     starMixAmount: 0.1,
@@ -36,7 +42,7 @@ const PALETTES = {
   },
   dark: {
     constellation: 'rgba(148, 188, 245, 0.22)',
-    label: (alpha) => `rgba(232, 241, 255, ${alpha})`,
+    label: (alpha: number) => `rgba(232, 241, 255, ${alpha})`,
     blackHoleRing: 'rgba(144, 203, 255, 0.82)',
     blackHoleAccretion: 'rgba(255, 197, 129, 0.74)',
     blackHoleCore: 'rgba(4, 8, 18, 0.98)',
@@ -44,7 +50,7 @@ const PALETTES = {
     compactRing: 'rgba(132, 186, 255, 0.82)',
     pulsarAccent: 'rgba(109, 217, 255, 0.62)',
     magnetarAccent: 'rgba(190, 160, 255, 0.62)',
-    heroShimmer: (alpha) => `rgba(194, 221, 255, ${alpha})`,
+    heroShimmer: (alpha: number) => `rgba(194, 221, 255, ${alpha})`,
     selectionRing: 'rgba(255, 221, 142, 0.96)',
     selectionGlow: 'rgba(255, 234, 178, 0.30)',
     starMixAmount: 0.36,
@@ -54,7 +60,7 @@ const PALETTES = {
   },
 };
 
-function colorForBV(bv) {
+function colorForBV(bv: number | null): string {
   if (bv == null) return '#3f78c7';
   if (bv < -0.1) return '#6a9dff';
   if (bv < 0.3) return '#4b74c3';
@@ -64,7 +70,7 @@ function colorForBV(bv) {
   return '#bf6840';
 }
 
-function objectRadius(obj) {
+function objectRadius(obj: FixedObject): number {
   if (obj.group === 'black-hole') return 4.8;
   if (
     obj.group === 'neutron-star' ||
@@ -76,7 +82,7 @@ function objectRadius(obj) {
   return Math.max(1.2, 4.8 - (obj.mag ?? 4.8) * 0.72);
 }
 
-function priorityForObject(obj) {
+function priorityForObject(obj: FixedObject): number {
   if (obj.group === 'black-hole') return 9;
   if (obj.group === 'pulsar' || obj.group === 'magnetar') return 8;
   if (obj.group === 'neutron-star') return 7;
@@ -86,33 +92,40 @@ function priorityForObject(obj) {
   return 0;
 }
 
-function labelFontForPriority(priority) {
+function labelFontForPriority(priority: number): string {
   if (priority >= 9) return "600 15px Georgia, 'Times New Roman', serif";
   if (priority >= 7) return "600 13px Georgia, 'Times New Roman', serif";
   return "500 12px Georgia, 'Times New Roman', serif";
 }
 
-function clamp(value, min, max) {
+function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(max, value));
 }
 
-function mixColors(hex, amount) {
+function mixColors(
+  hex: string,
+  amount: number
+): { r: number; g: number; b: number } {
   const normalized = hex.replace('#', '');
   const int = Number.parseInt(normalized, 16);
   const r = (int >> 16) & 255;
   const g = (int >> 8) & 255;
   const b = int & 255;
-  const mix = (channel) => Math.round(channel + (255 - channel) * amount);
+  const mix = (channel: number) =>
+    Math.round(channel + (255 - channel) * amount);
   return { r: mix(r), g: mix(g), b: mix(b) };
 }
 
-function colorString({ r, g, b }, alpha = 1) {
+function colorString(
+  { r, g, b }: { r: number; g: number; b: number },
+  alpha = 1
+): string {
   return `rgb(${r} ${g} ${b} / ${alpha})`;
 }
 
 const COMPACT_OBJECT_TINT = { r: 119, g: 171, b: 236 };
 
-function hashPhase(id) {
+function hashPhase(id: string): number {
   let hash = 0;
   for (let i = 0; i < id.length; i += 1) {
     hash = (hash * 33 + id.charCodeAt(i)) % 10000;
@@ -120,8 +133,28 @@ function hashPhase(id) {
   return (hash / 10000) * Math.PI * 2;
 }
 
-export function createBannerRenderer(canvas, scene = {}) {
-  const ctx = canvas.getContext('2d');
+export function createBannerRenderer(
+  canvas: HTMLCanvasElement,
+  scene: Partial<BannerSceneOptions> = {}
+): {
+  resize: () => void;
+  draw: (
+    altAzById: Map<string, AltAz>,
+    timeSeconds: number,
+    selectedId?: string | null
+  ) => number;
+  hitTest: (
+    mouseX: number,
+    mouseY: number,
+    altAzById: Map<string, AltAz>,
+    threshold?: number
+  ) => FixedObject | null;
+} {
+  const context = canvas.getContext('2d');
+  if (!context) {
+    throw new Error('2D canvas context is required for lumens-starmap-banner');
+  }
+  const ctx: CanvasRenderingContext2D = context;
   const options = { ...DEFAULT_SCENE, ...scene };
   const palette = options.darkMode ? PALETTES.dark : PALETTES.light;
   let width = 1200;
@@ -130,9 +163,9 @@ export function createBannerRenderer(canvas, scene = {}) {
   let radius = 720;
   let centerX = width * options.cropCenterX;
   let centerY = height * options.cropCenterY;
-  let lastLabelBoxes = [];
+  let lastLabelBoxes: LabelBox[] = [];
 
-  function resize() {
+  function resize(): void {
     const rect = canvas.getBoundingClientRect();
     dpr = window.devicePixelRatio || 1;
     width = Math.max(320, Math.floor(rect.width || 1200));
@@ -145,7 +178,7 @@ export function createBannerRenderer(canvas, scene = {}) {
     centerY = height * options.cropCenterY;
   }
 
-  function project(altitude, azimuth) {
+  function project(altitude: number, azimuth: number): Point {
     const radialDistance = ((90 - altitude) / 90) * radius;
     const azimuthRadians = azimuth * DEG;
     const x = centerX - radialDistance * Math.sin(azimuthRadians);
@@ -159,11 +192,14 @@ export function createBannerRenderer(canvas, scene = {}) {
     };
   }
 
-  function drawBackground() {
+  function drawBackground(): void {
     ctx.clearRect(0, 0, width, height);
   }
 
-  function constellationVisiblePoints(altAzById, line) {
+  function constellationVisiblePoints(
+    altAzById: Map<string, AltAz>,
+    line: Constellation['lines'][number]
+  ): { pa: Point; pb: Point } | null {
     const [aId, bId] = line;
     const a = altAzById.get(aId);
     const b = altAzById.get(bId);
@@ -173,12 +209,11 @@ export function createBannerRenderer(canvas, scene = {}) {
     return { pa, pb };
   }
 
-  function drawConstellationFragments(altAzById) {
+  function drawConstellationFragments(altAzById: Map<string, AltAz>): void {
     ctx.save();
     ctx.strokeStyle = palette.constellation;
     ctx.lineWidth = 1;
     for (const constellation of CONSTELLATIONS) {
-      let visibleSegments = 0;
       for (const line of constellation.lines) {
         const points = constellationVisiblePoints(altAzById, line);
         if (!points) continue;
@@ -191,7 +226,6 @@ export function createBannerRenderer(canvas, scene = {}) {
         ) {
           continue;
         }
-        visibleSegments += 1;
         ctx.beginPath();
         ctx.moveTo(pa.x, pa.y);
         ctx.lineTo(pb.x, pb.y);
@@ -201,7 +235,13 @@ export function createBannerRenderer(canvas, scene = {}) {
     ctx.restore();
   }
 
-  function drawStarGlow(x, y, radiusPx, tint, alpha) {
+  function drawStarGlow(
+    x: number,
+    y: number,
+    radiusPx: number,
+    tint: { r: number; g: number; b: number },
+    alpha: number
+  ): void {
     const glow = ctx.createRadialGradient(x, y, 0, x, y, radiusPx * 6);
     glow.addColorStop(0, colorString(tint, alpha));
     glow.addColorStop(0.3, colorString(tint, alpha * 0.25));
@@ -212,7 +252,11 @@ export function createBannerRenderer(canvas, scene = {}) {
     ctx.fill();
   }
 
-  function drawObjectMarker(obj, projected, timeSeconds) {
+  function drawObjectMarker(
+    obj: FixedObject,
+    projected: Point,
+    timeSeconds: number
+  ): void {
     const baseRadius = objectRadius(obj);
     const phase = hashPhase(obj.id);
     const x = projected.x;
@@ -306,7 +350,7 @@ export function createBannerRenderer(canvas, scene = {}) {
     }
   }
 
-  function visibleLabelAlpha(x, y) {
+  function visibleLabelAlpha(x: number, y: number): number {
     const margin = 42;
     const left = clamp((x + margin) / margin, 0, 1);
     const right = clamp((width + margin - x) / margin, 0, 1);
@@ -315,7 +359,10 @@ export function createBannerRenderer(canvas, scene = {}) {
     return Math.min(left, right, top, bottom);
   }
 
-  function drawLabels(candidates, timeSeconds) {
+  function drawLabels(
+    candidates: Array<{ obj: FixedObject; point: Point; priority: number }>,
+    timeSeconds: number
+  ): void {
     lastLabelBoxes = [];
     let placed = 0;
     for (const entry of candidates) {
@@ -353,7 +400,11 @@ export function createBannerRenderer(canvas, scene = {}) {
     }
   }
 
-  function drawSelection(selectedId, altAzById, timeSeconds) {
+  function drawSelection(
+    selectedId: string | null,
+    altAzById: Map<string, AltAz>,
+    timeSeconds: number
+  ): void {
     if (!selectedId) return;
     const selected = FIXED_OBJECTS.find((obj) => obj.id === selectedId);
     const aa = altAzById.get(selectedId);
@@ -386,8 +437,13 @@ export function createBannerRenderer(canvas, scene = {}) {
     ctx.restore();
   }
 
-  function hitTest(mouseX, mouseY, altAzById, threshold = 14) {
-    let best = null;
+  function hitTest(
+    mouseX: number,
+    mouseY: number,
+    altAzById: Map<string, AltAz>,
+    threshold = 14
+  ): FixedObject | null {
+    let best: FixedObject | null = null;
     let bestDist = threshold;
     for (const obj of FIXED_OBJECTS) {
       const aa = altAzById.get(obj.id);
@@ -409,11 +465,19 @@ export function createBannerRenderer(canvas, scene = {}) {
     return best;
   }
 
-  function draw(altAzById, timeSeconds, selectedId = null) {
+  function draw(
+    altAzById: Map<string, AltAz>,
+    timeSeconds: number,
+    selectedId: string | null = null
+  ): number {
     drawBackground();
     drawConstellationFragments(altAzById);
 
-    const labelCandidates = [];
+    const labelCandidates: Array<{
+      obj: FixedObject;
+      point: Point;
+      priority: number;
+    }> = [];
     let visible = 0;
     for (const obj of FIXED_OBJECTS) {
       const aa = altAzById.get(obj.id);

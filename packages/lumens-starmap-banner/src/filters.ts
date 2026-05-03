@@ -1,13 +1,20 @@
-// @ts-nocheck
+import type {
+  FiltersState,
+  FixedObject,
+  ObjectGroup,
+  Observability,
+  RawFixedObject,
+  StarSizeBucket,
+} from './types.js';
 
 const STAR_BUCKETS = [
   { id: 'bright', maxMag: 1.5 },
   { id: 'mid', maxMag: 2.7 },
   { id: 'faint', maxMag: 3.6 },
   { id: 'very-faint', maxMag: Infinity },
-];
+] as const satisfies ReadonlyArray<{ id: StarSizeBucket; maxMag: number }>;
 
-export function getStarSizeBucket(mag) {
+export function getStarSizeBucket(mag: number | null): StarSizeBucket | null {
   if (mag == null) return null;
   for (const bucket of STAR_BUCKETS) {
     if (mag <= bucket.maxMag) return bucket.id;
@@ -15,7 +22,9 @@ export function getStarSizeBucket(mag) {
   return 'very-faint';
 }
 
-export function getObjectGroup(object) {
+export function getObjectGroup(
+  object: Pick<RawFixedObject, 'kind' | 'subtype'>
+): ObjectGroup {
   if (object.kind === 'black-hole') return 'black-hole';
   if (object.subtype === 'pulsar') return 'pulsar';
   if (object.subtype === 'magnetar') return 'magnetar';
@@ -23,11 +32,13 @@ export function getObjectGroup(object) {
   return 'star';
 }
 
-export function getObservability(object) {
+export function getObservability(
+  object: Pick<RawFixedObject, 'kind' | 'subtype'>
+): Observability {
   return getObjectGroup(object) === 'star' ? 'observable' : 'unobservable';
 }
 
-export function defaultFilters() {
+export function defaultFilters(): FiltersState {
   return {
     showObservable: true,
     showUnobservable: true,
@@ -44,13 +55,19 @@ export function defaultFilters() {
   };
 }
 
-export function isObservabilityEnabled(observability, filters) {
+export function isObservabilityEnabled(
+  observability: Observability,
+  filters: FiltersState
+): boolean {
   return observability === 'observable'
     ? filters.showObservable
     : filters.showUnobservable;
 }
 
-export function isObjectVisibleInFilters(object, filters) {
+export function isObjectVisibleInFilters(
+  object: FixedObject,
+  filters: FiltersState
+): boolean {
   if (!isObservabilityEnabled(object.observability, filters)) return false;
 
   switch (object.group) {
@@ -72,15 +89,15 @@ export function isObjectVisibleInFilters(object, filters) {
   }
 }
 
-export function shouldDrawConstellations(filters) {
+export function shouldDrawConstellations(filters: FiltersState): boolean {
   return filters.showConstellations && filters.showObservable;
 }
 
-export function shouldAutoLabelObject(object) {
+export function shouldAutoLabelObject(object: FixedObject): boolean {
   return object.group === 'star' && object.sizeBucket === 'bright';
 }
 
-export function objectTypeLabel(object) {
+export function objectTypeLabel(object: FixedObject): string {
   if (object.group === 'black-hole') return 'Black hole';
   if (object.group === 'pulsar') return 'Pulsar';
   if (object.group === 'magnetar') return 'Magnetar';

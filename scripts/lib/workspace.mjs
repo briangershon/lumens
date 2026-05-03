@@ -2,9 +2,9 @@ import { access, readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const moduleDir = path.dirname(fileURLToPath(import.meta.url));
 
-export const rootDir = path.resolve(__dirname, '../..');
+export const rootDir = path.resolve(moduleDir, '../..');
 export const packagesDir = path.join(rootDir, 'packages');
 export const docsAppDir = path.join(rootDir, 'apps', 'docs');
 export const docsSrcDir = path.join(docsAppDir, 'src');

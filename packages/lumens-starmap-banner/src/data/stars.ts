@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 // Fixed-sky catalog, hand-curated from public references (Yale BSC / HYG v3,
 // public domain, plus notable compact-object positions). RA in decimal hours,
 // Dec in decimal degrees, J2000 epoch. `mag` is apparent visual magnitude.
@@ -13,8 +11,13 @@ import {
   getObservability,
   getStarSizeBucket,
 } from '../filters.js';
+import type {
+  FixedObject,
+  PhysicalMetadata,
+  RawFixedObject,
+} from '../types.js';
 
-const RAW_FIXED_OBJECTS = [
+const RAW_FIXED_OBJECTS: RawFixedObject[] = [
   // ── Solitary or small-group naked-eye luminaries ──────────────────────────
   {
     id: 'sirius',
@@ -1339,28 +1342,24 @@ const RAW_FIXED_OBJECTS = [
   },
 ];
 
-export const FIXED_OBJECTS = RAW_FIXED_OBJECTS.map((obj) => {
-  const normalized = {
-    kind: 'star',
-    ...obj,
-  };
-  return {
-    ...normalized,
-    group: getObjectGroup(normalized),
-    observability: getObservability(normalized),
-    sizeBucket:
-      normalized.kind === 'star' ? getStarSizeBucket(normalized.mag) : null,
-  };
+export const FIXED_OBJECTS: FixedObject[] = RAW_FIXED_OBJECTS.map((obj) => {
+  const normalized = Object.assign({}, obj) as FixedObject;
+  normalized.kind ??= 'star';
+  normalized.group = getObjectGroup(normalized);
+  normalized.observability = getObservability(normalized);
+  normalized.sizeBucket =
+    normalized.kind === 'star' ? getStarSizeBucket(normalized.mag) : null;
+  return normalized;
 });
 
-export const OBJECTS_BY_ID = Object.fromEntries(
+export const OBJECTS_BY_ID: Record<string, FixedObject> = Object.fromEntries(
   FIXED_OBJECTS.map((obj) => [obj.id, obj])
 );
 
 // Approximate physical metadata for a subset of prominent stars, intended for
 // educational HUD display rather than precision astronomy. Distances are in
 // light-years, radii in solar radii, masses in solar masses, and ages in Myr.
-export const OBJECT_PHYSICALS_BY_ID = {
+export const OBJECT_PHYSICALS_BY_ID: Record<string, PhysicalMetadata> = {
   sirius: {
     distanceLy: 8.61,
     radiusRsun: 1.7144,

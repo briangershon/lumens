@@ -1,11 +1,11 @@
-// @ts-nocheck
+import type { Constellation } from '../types.js';
 
 // Hand-curated stick figures for ~15 well-known constellations visible from
 // the northern mid-latitudes. Each `lines` entry is a pair of star ids that
 // must exist in data/stars.js; the renderer draws a segment only when both
 // endpoints are above the horizon.
 
-export const CONSTELLATIONS = [
+export const CONSTELLATIONS: Constellation[] = [
   {
     name: 'Ursa Major',
     lines: [

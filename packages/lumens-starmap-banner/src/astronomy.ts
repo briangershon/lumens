@@ -1,16 +1,15 @@
-// @ts-nocheck
 // Pure-function astronomy utilities. No dependencies.
 // Reductions follow Meeus, "Astronomical Algorithms" (2nd ed.).
 
 const DEG = Math.PI / 180;
 const RAD = 180 / Math.PI;
 
-export function julianDate(date) {
+export function julianDate(date: Date): number {
   return date.getTime() / 86400000 + 2440587.5;
 }
 
 // Greenwich Mean Sidereal Time, in hours [0, 24).
-export function gmst(date) {
+export function gmst(date: Date): number {
   const jd = julianDate(date);
   const t = (jd - 2451545.0) / 36525;
   let degrees =
@@ -23,7 +22,7 @@ export function gmst(date) {
 }
 
 // Local Sidereal Time, in hours [0, 24). East longitude positive.
-export function localSiderealTime(date, longitudeDeg) {
+export function localSiderealTime(date: Date, longitudeDeg: number): number {
   const lst = gmst(date) + longitudeDeg / 15;
   return ((lst % 24) + 24) % 24;
 }
@@ -31,7 +30,12 @@ export function localSiderealTime(date, longitudeDeg) {
 // (RA hours, Dec degrees) + observer latitude + LST (hours)
 //   → { altitude, azimuth } in degrees.
 // Azimuth: 0=N, 90=E, 180=S, 270=W.
-export function equatorialToHorizontal(ra, dec, latDeg, lstHours) {
+export function equatorialToHorizontal(
+  ra: number,
+  dec: number,
+  latDeg: number,
+  lstHours: number
+): { altitude: number; azimuth: number } {
   const haDeg = (((lstHours - ra) * 15 + 540) % 360) - 180; // [-180, 180)
   const ha = haDeg * DEG;
   const d = dec * DEG;

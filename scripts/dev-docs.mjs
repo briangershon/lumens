@@ -137,7 +137,7 @@ await queueDocsSync();
 const docsWatcher = watch(docsSrcDir);
 
 void (async () => {
-  for await (const _event of docsWatcher) {
+  for await (const _ of docsWatcher) {
     await queueDocsSync();
     console.log('Synced docs app source changes.');
   }

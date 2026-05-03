@@ -1,0 +1,21 @@
+{
+  "categories": {
+    "correctness": "error",
+    "suspicious": "error",
+    "perf": "error"
+  },
+  "overrides": [
+    {
+      "files": ["scripts/**/*"],
+      "rules": {
+        "no-await-in-loop": "off",
+        "no-useless-call": "off",
+        "oxc/no-accumulating-spread": "off",
+        "oxc/no-map-spread": "off",
+        "unicorn/prefer-array-find": "off",
+        "unicorn/prefer-array-flat-map": "off",
+        "unicorn/prefer-set-has": "off"
+      }
+    }
+  ]
+}

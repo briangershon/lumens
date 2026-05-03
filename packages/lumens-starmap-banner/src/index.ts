@@ -3,6 +3,7 @@ import { createBannerRenderer } from './banner-renderer.js';
 import { CONSTELLATIONS } from './data/constellations.js';
 import { FIXED_OBJECTS, OBJECT_PHYSICALS_BY_ID } from './data/stars.js';
 import { objectTypeLabel } from './filters.js';
+import type { AltAz, FixedObject, PhysicalMetadata } from './types.js';
 
 const ELEMENT_TAG_NAME = 'lumens-starmap-banner';
 const SELECTION_EVENT_NAME = 'starmap-object-selected';
@@ -24,33 +25,6 @@ const DEFAULT_CONFIG = {
     darkMode: false,
   },
 } as const;
-
-type ObjectGroup =
-  | 'star'
-  | 'black-hole'
-  | 'neutron-star'
-  | 'pulsar'
-  | 'magnetar';
-
-type FixedObject = {
-  id: string;
-  name: string;
-  ra: number;
-  dec: number;
-  mag: number | null;
-  con?: string;
-  observability?: string | null;
-  group: ObjectGroup;
-};
-
-type AltAz = {
-  altitude: number;
-  azimuth: number;
-};
-
-type PhysicalMetadata = {
-  distanceLy?: number | null;
-};
 
 type BannerConfig = {
   speedX?: number;
