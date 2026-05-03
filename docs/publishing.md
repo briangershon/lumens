@@ -84,25 +84,24 @@ pnpm changeset
 
 3. Select the package, such as `@briangershon/lumens-starmap-banner`.
 4. Choose the version bump type: `patch`, `minor`, or `major`.
-5. Apply the version bump locally:
+5. Commit the package changes and the generated changeset file.
+6. Merge that branch to `main`.
 
-```bash
-pnpm run version-packages
-```
-
-6. Commit the package changes and the versioned files.
-7. Merge that branch to `main`.
-
-Once the versioned change reaches `main`, GitHub Actions will:
+Once the change reaches `main`, GitHub Actions will:
 
 - build the workspace
+- open or update the Changesets release PR with the bumped package versions
+
+When you are ready to publish, merge the generated release PR. On that subsequent `main` run, GitHub Actions will:
+
+- build the workspace again
 - publish only the changed package to npm
 - create the GitHub Release for that package version
 - upload the package browser bundle as a release asset
 
-This is the recommended default because the release version is explicit in the branch before merge.
+This is the recommended default because the `.changeset/*.md` file stays visible in feature PR review and release timing remains explicit.
 
-If you prefer, Changesets can also manage version bumps through its own generated version PR. In that alternate flow, merge the branch with the `.changeset/*.md` file first, then merge the version PR that GitHub Actions opens, and CI will publish on the subsequent `main` run.
+If you intentionally want publish-on-merge for a specific release, you can still run `pnpm run version-packages` locally before merging. That bypasses the release PR for that branch and lets the next `main` push publish immediately.
 
 ## Manual fallback release
 
