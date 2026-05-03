@@ -132,9 +132,28 @@ Release automation is driven by Changesets on `main`:
 ### First-time setup
 
 1. Ensure the npm scope `@briangershon` is ready for publishing.
-2. Create an npm token with publish access.
-3. Add the token to this repository's GitHub Actions secrets as `NPM_TOKEN`.
-4. Ensure GitHub Actions is enabled for the repository.
+2. Run `npm login` locally with an account that has publish access to the `@briangershon` scope.
+3. Build the package you want to publish:
+
+```bash
+pnpm run build
+```
+
+4. Publish that package manually once so it is established on npm. For the current package:
+
+```bash
+cd packages/lumens-theme-button
+npm publish --access public
+```
+
+5. In npm package settings, enable Trusted Publishing for this GitHub repository/workflow so GitHub Actions can publish future releases without a stored npm token.
+6. Ensure GitHub Actions is enabled for the repository.
+
+Notes for the first manual publish:
+
+- `npm publish --access public` is required for new scoped public packages.
+- The package publishes from its own directory because each workspace package is released independently.
+- You only need this manual bootstrap once per new package name.
 
 ### Standard release flow
 
@@ -156,6 +175,8 @@ Once the change reaches `main`, GitHub Actions will:
 - publish only the changed package to npm
 - create the GitHub Release for that package version
 - upload the package browser bundle as a release asset
+
+This automated publish flow assumes npm Trusted Publishing has already been configured for the package.
 
 ### Manual fallback
 
