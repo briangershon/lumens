@@ -66,7 +66,15 @@
           </div>
 
           <div class="preview-shell dark">
+            <div class="preview-overlay" id="index-preview-overlay">
+              <strong>Starmap banner preview</strong>
+              <span>
+                Hover a visible star or unseen object to see the kind of host
+                overlay data the event can drive.
+              </span>
+            </div>
             <lumens-starmap-banner
+              id="index-preview-banner"
               dark-mode
               speed="900"
               label-limit="14"
@@ -92,6 +100,49 @@
 
     <script type="module">
       import './assets/lumens-starmap-banner/lumens-starmap-banner.bundle.js';
+
+      const preview = document.querySelector('#index-preview-banner');
+      const overlay = document.querySelector('#index-preview-overlay');
+
+      const renderDefaultOverlay = () => {
+        overlay.querySelector('strong').textContent = 'Starmap banner preview';
+        overlay.querySelector('span').textContent =
+          'Hover a visible star or unseen object to see the kind of host overlay data the event can drive.';
+      };
+
+      const renderHoverOverlay = (detail) => {
+        const parts = [
+          detail.type,
+          detail.constellation,
+          detail.magnitude == null
+            ? null
+            : `mag ${detail.magnitude.toFixed(2)}`,
+          detail.altitude == null ? null : `alt ${detail.altitude.toFixed(1)}°`,
+          detail.distanceLy == null
+            ? null
+            : detail.distanceLy >= 100
+              ? `${Math.round(detail.distanceLy).toLocaleString()} ly away`
+              : `${detail.distanceLy.toFixed(1)} ly away`,
+        ]
+          .filter(Boolean)
+          .join(' · ');
+
+        overlay.querySelector('strong').textContent =
+          detail.name || 'Object details';
+        overlay.querySelector('span').textContent =
+          parts || 'Object details available from the hover event.';
+      };
+
+      renderDefaultOverlay();
+
+      preview?.addEventListener('starmap-object-selected', (event) => {
+        if (!event.detail?.selected) {
+          renderDefaultOverlay();
+          return;
+        }
+
+        renderHoverOverlay(event.detail);
+      });
     </script>
   </body>
 </html>

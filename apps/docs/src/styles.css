@@ -414,6 +414,40 @@ a {
   min-height: 240px;
 }
 
+.preview-overlay {
+  position: absolute;
+  inset: auto 1rem 1rem 1rem;
+  z-index: 1;
+  display: grid;
+  gap: 0.35rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--panel-border);
+  border-radius: 18px;
+  background: rgba(255, 251, 244, 0.7);
+  backdrop-filter: blur(14px);
+  box-shadow: 0 16px 40px rgba(18, 30, 48, 0.2);
+}
+
+.preview-shell.dark .preview-overlay {
+  background: rgba(7, 16, 29, 0.74);
+}
+
+.preview-overlay strong,
+.preview-overlay span {
+  font-family: system-ui, sans-serif;
+}
+
+.preview-overlay strong {
+  color: var(--text-main);
+  font-size: 0.98rem;
+}
+
+.preview-overlay span {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  line-height: 1.45;
+}
+
 .split-grid {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
@@ -504,5 +538,10 @@ pre {
 
   .hero h1 {
     max-width: none;
+  }
+
+  .preview-overlay {
+    inset: auto 0.75rem 0.75rem 0.75rem;
+    padding: 0.8rem 0.85rem;
   }
 }

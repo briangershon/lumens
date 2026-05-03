@@ -52,9 +52,11 @@ Do not move agent-specific instructions into `README.md` unless there is a human
   - events
   - one starter integration example
   - behavior or host-layout expectations when relevant
+- When a component's primary integration value comes from emitted events, show a realistic host-response example in the docs page rather than only listing the event API.
+- For `lumens-starmap-banner`, preserve the host-owned hover detail overlay as the recommended example response to `starmap-object-selected`.
 - Prefer explicit HTML content on component pages over manifest-driven API generation.
 - Use stable fragment anchors on component pages for key sections such as install, properties, events, and example.
-- If a package API changes, update its dedicated docs page, package `README.md`, and relevant index links together.
+- If a package API or recommended interaction pattern changes, update its dedicated docs page, starter example, live preview treatment, package `README.md`, and relevant index links together.
 
 ## Editing Guardrails
 

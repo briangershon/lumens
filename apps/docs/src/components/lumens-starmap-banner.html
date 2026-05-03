@@ -48,10 +48,18 @@
           <p>
             The demo below imports the built browser bundle that Lumens docs
             publish, so the page reflects the component contract consumers can
-            load directly.
+            load directly. Each preview also demonstrates a recommended
+            host-owned hover detail overlay layered in front of the banner.
           </p>
           <div class="split-grid">
             <div class="preview-shell light">
+              <div class="preview-overlay" data-overlay>
+                <strong>Light host example</strong>
+                <span>
+                  Hover a visible star or unseen object to see a host-owned
+                  overlay driven by the event payload.
+                </span>
+              </div>
               <lumens-starmap-banner
                 id="preview-light"
                 speed="900"
@@ -60,6 +68,13 @@
               ></lumens-starmap-banner>
             </div>
             <div class="preview-shell dark">
+              <div class="preview-overlay" data-overlay>
+                <strong>Dark host example</strong>
+                <span>
+                  The same event can feed an overlay on darker editorial
+                  surfaces.
+                </span>
+              </div>
               <lumens-starmap-banner
                 id="preview-dark"
                 dark-mode
@@ -235,6 +250,11 @@ Hover an object in either preview to inspect the emitted event detail.</pre
             When <code>detail.selected</code> is <code>false</code>, the rest of
             the payload fields are <code>null</code>.
           </p>
+          <p>
+            The preview overlays above show a recommended host response: listen
+            for <code>starmap-object-selected</code> and write the hovered
+            object detail into a positioned card or caption layer.
+          </p>
           <pre><code>type StarmapSelectionDetail = {
   selected: boolean;
   id: string | null;
@@ -255,18 +275,35 @@ Hover an object in either preview to inspect the emitted event detail.</pre
         <h2>Viable first integration</h2>
         <p>
           This is the recommended first example for a new site because it shows
-          package import, host-owned layout, configuration attributes, and the
-          emitted selection event together.
+          package import, host-owned layout, configuration attributes, the
+          emitted selection event, and a host-owned overlay that surfaces the
+          hover data.
         </p>
         <pre><code>import '@briangershon/lumens-starmap-banner';
 
 const banner = document.querySelector('lumens-starmap-banner');
+const overlay = document.querySelector('[data-starmap-overlay]');
 
 banner?.addEventListener('starmap-object-selected', (event) =&gt; {
-  if (!event.detail.selected) return;
-  console.log(event.detail.name, event.detail.type);
+  if (!overlay) return;
+
+  if (!event.detail.selected) {
+    overlay.textContent = 'Hover a star or unseen object to inspect it.';
+    return;
+  }
+
+  overlay.textContent = [
+    event.detail.name,
+    event.detail.type,
+    event.detail.constellation,
+  ]
+    .filter(Boolean)
+    .join(' · ');
 });</code></pre>
         <pre><code>&lt;header class="site-hero"&gt;
+  &lt;div data-starmap-overlay class="starmap-hover-card"&gt;
+    Hover a star or unseen object to inspect it.
+  &lt;/div&gt;
   &lt;lumens-starmap-banner
     dark-mode
     speed="900"
@@ -274,6 +311,12 @@ banner?.addEventListener('starmap-object-selected', (event) =&gt; {
     start-time="2026-01-15T05:00:00Z"
   &gt;&lt;/lumens-starmap-banner&gt;
 &lt;/header&gt;</code></pre>
+        <div class="callout">
+          <p>
+            Recommended pattern: treat the overlay as host UI layered in front
+            of the banner, not as UI owned by the custom element itself.
+          </p>
+        </div>
       </section>
 
       <section class="panel section-card">
@@ -311,14 +354,48 @@ banner?.addEventListener('starmap-object-selected', (event) =&gt; {
       const eventLog = document.querySelector('#event-log');
       const previews = document.querySelectorAll('lumens-starmap-banner');
 
+      const renderDefaultOverlay = (overlay, title, message) => {
+        overlay.querySelector('strong').textContent = title;
+        overlay.querySelector('span').textContent = message;
+      };
+
+      const renderHoverOverlay = (overlay, detail) => {
+        const parts = [
+          detail.type,
+          detail.constellation,
+          detail.magnitude == null
+            ? null
+            : `mag ${detail.magnitude.toFixed(2)}`,
+          detail.altitude == null ? null : `alt ${detail.altitude.toFixed(1)}°`,
+          detail.distanceLy == null
+            ? null
+            : detail.distanceLy >= 100
+              ? `${Math.round(detail.distanceLy).toLocaleString()} ly away`
+              : `${detail.distanceLy.toFixed(1)} ly away`,
+        ]
+          .filter(Boolean)
+          .join(' · ');
+
+        overlay.querySelector('strong').textContent =
+          detail.name || 'Object details';
+        overlay.querySelector('span').textContent =
+          parts || 'Object details available from the hover event.';
+      };
+
       for (const preview of previews) {
+        const overlay = preview.parentElement.querySelector('[data-overlay]');
+        const defaultTitle = overlay.querySelector('strong').textContent;
+        const defaultMessage = overlay.querySelector('span').textContent;
+
         preview.addEventListener('starmap-object-selected', (event) => {
           if (!event.detail.selected) {
+            renderDefaultOverlay(overlay, defaultTitle, defaultMessage);
             eventLog.textContent =
               'Selection cleared. Hover an object to inspect event detail.';
             return;
           }
 
+          renderHoverOverlay(overlay, event.detail);
           eventLog.textContent = JSON.stringify(event.detail, null, 2);
         });
       }
